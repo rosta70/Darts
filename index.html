@@ -4,6 +4,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>Šipky – zapis skóre</title>
+  <meta name="theme-color" content="#0b0e1a" />
+  <link rel="manifest" href="manifest.webmanifest" />
   <style>
     /* ------------------------------
        TÉMATA A PROMĚNNÉ
@@ -45,9 +47,16 @@
     a{color:var(--accent)}
     .wrap{max-width:1100px;margin:0 auto;padding:16px 16px 100px}
 
-    header{position:sticky;top:0;z-index:5;background:linear-gradient(180deg,var(--bg1) 85%,rgba(0,0,0,0));backdrop-filter:saturate(120%) blur(4px);display:flex;gap:12px;align-items:center;justify-content:space-between;margin:0 0 16px;padding:8px 0 10px}
-    .title{font-weight:800;letter-spacing:.3px;font-size:20px;display:flex;align-items:center;gap:10px}
+    header{position:sticky;top:0;z-index:5;background:linear-gradient(180deg,var(--bg1) 90%,rgba(0,0,0,0));backdrop-filter:saturate(120%) blur(4px);display:flex;gap:12px;align-items:center;justify-content:space-between;margin:0 0 10px;padding:8px 0 10px}
+    .brand{display:flex;align-items:center;gap:10px}
+    .brand-title{font-weight:800;letter-spacing:.3px;font-size:20px}
     .pill{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:6px 10px;color:var(--muted)}
+
+    /* horní aktivní lišta během hry */
+    .activeTop{display:none;align-items:center;gap:8px}
+    .activeTop .dot{width:10px;height:10px;border-radius:50%;background:var(--accent2);box-shadow:0 0 10px var(--accent2)}
+    body.playing .brand{display:none}
+    body.playing .activeTop{display:flex}
 
     .row{display:flex;gap:12px;flex-wrap:wrap}
     .col{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:14px;box-shadow:var(--shadow)}
@@ -108,7 +117,6 @@
 
     /* Schovávání při aktivní hře */
     body.playing .hide-when-playing{display:none !important}
-    /* Volitelné minimální UI – schovat, pokud je v nastavení zapnuto */
     body.minimal.playing .hide-during-play{display:none !important}
 
     /* Lepivý informační panel dole */
@@ -129,19 +137,33 @@
     @media (max-width: 480px){
       .keypad{grid-template-columns:repeat(4,1fr)}
       .chip{padding:10px 12px}
-      .title{font-size:18px}
+      .brand-title{font-size:18px}
     }
   </style>
 </head>
 <body class="theme-dark color-keys sticky-info minimal">
 <div class="wrap">
   <header>
-    <div class="title">🎯 <span>Šipky – zapis skóre</span><span class="pill" id="statusPill">Připraveno</span></div>
+    <div class="brand">
+      <div class="brand-title">🎯 <span>Šipky – zapis skóre</span></div>
+      <span class="pill hide-when-playing" id="statusPill">Připraveno</span>
+    </div>
+
+    <!-- horní pruh s aktivním hráčem (viditelný jen při hře) -->
+    <div class="activeTop" id="activeTop">
+      <span class="dot"></span>
+      <span id="activeTopName" style="font-weight:800"></span>
+      <span class="pill" id="activeTopRemain"></span>
+      <span class="pill" id="activeTopThrows"></span>
+      <button id="installBtnHeader" class="tab" style="margin-left:8px;display:none">Nainstalovat</button>
+    </div>
+
     <div class="tabs hide-when-playing">
       <button class="tab active" data-tab="game">Hra</button>
       <button class="tab" data-tab="history">Historie</button>
       <button class="tab" data-tab="leaderboard">Žebříček</button>
       <button class="tab" data-tab="settings">Nastavení</button>
+      <button class="tab" id="installBtn" style="display:none">Nainstalovat</button>
     </div>
   </header>
 
@@ -245,6 +267,11 @@
         <label><input type="checkbox" id="minimalUi" checked/> Minimal UI během hry (skryje nepotřebná tlačítka)</label>
         <label><input type="checkbox" id="stickyBarToggle" checked/> Pevný panel skóre dole</label>
       </div>
+      <h3>Instalace jako aplikace</h3>
+      <div class="chips">
+        <button class="primary" id="installBtnSettings" style="display:none">Nainstalovat</button>
+        <span class="small muted">Tlačítko se zobrazí, jakmile prohlížeč umožní instalaci (PWA).</span>
+      </div>
       <p class="small muted">Během hry je zakázáno přidávat hráče (pro přidání ukončete leg, nebo začněte nový před prvním hodem).</p>
       <h3>Soubory pro čtení hodnot</h3>
       <p class="muted small">Umístěte své zvukové soubory do složky <code>audio/</code> vedle této stránky. Názvy: <code>1.mp3</code>, <code>2.mp3</code>, …, <code>180.mp3</code>. Hraje se výsledná hodnota (násobek × číslo). Pro bull: 25 a 50.</p>
@@ -260,6 +287,32 @@
 <audio id="voice" preload="auto"></audio>
 
 <script>
+// ------------------------
+// PWA – service worker & instalace
+// ------------------------
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(()=>{});
+  });
+}
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  ['installBtn','installBtnHeader','installBtnSettings'].forEach(id=>{ const b=document.getElementById(id); if(b) b.style.display='inline-block'; });
+});
+window.addEventListener('appinstalled', ()=>{
+  deferredPrompt = null;
+  ['installBtn','installBtnHeader','installBtnSettings'].forEach(id=>{ const b=document.getElementById(id); if(b) b.style.display='none'; });
+});
+async function doInstall(){
+  if(!deferredPrompt){ alert('Instalace zatím není k dispozici.'); return; }
+  deferredPrompt.prompt();
+  await deferredPrompt.userChoice; // {outcome}
+  deferredPrompt = null;
+}
+['installBtn','installBtnHeader','installBtnSettings'].forEach(id=>{ const b=document.getElementById(id); if(b) b.addEventListener('click', doInstall); });
+
 // ------------------------
 // Stav aplikace
 // ------------------------
@@ -308,10 +361,10 @@ function clearActive(){ localStorage.removeItem('dartsActiveV1'); }
 // UI – panely
 // ------------------------
 const panels = document.querySelectorAll('[data-panel]');
-const tabs = document.querySelectorAll('.tab');
+const tabs = document.querySelectorAll('.tab[data-tab]');
 for (const tab of tabs){
   tab.addEventListener('click', () => {
-    tabs.forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
     tab.classList.add('active');
     const target = tab.getAttribute('data-tab');
     panels.forEach(p=>p.hidden = p.getAttribute('data-panel')!==target);
@@ -319,7 +372,7 @@ for (const tab of tabs){
     if (target==='leaderboard') renderLeaderboard();
   });
 }
-function setStatus(msg){ document.getElementById('statusPill').textContent = msg; }
+function setStatus(msg){ const el=document.getElementById('statusPill'); if(el) el.textContent = msg; }
 
 // ------------------------
 // Hráči a hra
@@ -523,6 +576,7 @@ function renderPlayers(){
   });
   updateTurnInfo();
   updateSticky();
+  updateTopBar();
   // Disable/hide add controls podle stavu
   const playing = isInProgress();
   const nameInp = document.getElementById('newPlayerName');
@@ -591,6 +645,19 @@ function updateSticky(){
   const p = currentPlayer();
   const throwTxt = p && p.turnThrows && p.turnThrows.length ? p.turnThrows.map(formatDartShort).join(', ') : '—';
   bar.innerHTML = p ? `Na tahu: <b>${escapeHtml(p.name)}</b> • Zbývá: <b>${p.remaining}</b> • Hody: ${throwTxt}` : '—';
+}
+
+function updateTopBar(){
+  const top = document.getElementById('activeTop');
+  if(!top) return;
+  const playing = isInProgress();
+  top.style.display = playing ? 'flex' : 'none';
+  if(!playing){ return; }
+  const p = currentPlayer();
+  document.getElementById('activeTopName').textContent = p? p.name : '—';
+  document.getElementById('activeTopRemain').textContent = p? ('Zbývá: '+p.remaining) : '';
+  const throwTxt = p && p.turnThrows && p.turnThrows.length ? p.turnThrows.map(formatDartShort).join(', ') : '—';
+  document.getElementById('activeTopThrows').textContent = 'Hody: '+throwTxt;
 }
 
 function formatDart(d){
@@ -665,6 +732,7 @@ function bindSettingsUI(){
 function updateUI(){
   document.body.classList.toggle('playing', isInProgress());
   updateSticky();
+  updateTopBar();
 }
 
 // ------------------------
@@ -700,7 +768,6 @@ function setupMultiplierChips(){
   });
 }
 
-// Inicializace + obnovení aktivní hry
 buildKeypad();
 setupMultiplierChips();
 renderPlayers();

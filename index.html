@@ -149,6 +149,16 @@
       </div>
 
       <div class="col grow">
+        <h3>Volba hry</h3>
+        <div class="chips hide-during-play" id="gameOptions" style="margin-bottom:8px">
+          <label class="chip"><input type="radio" name="x01" value="101"> 101</label>
+          <label class="chip"><input type="radio" name="x01" value="301"> 301</label>
+          <label class="chip"><input type="radio" name="x01" value="501"> 501</label>
+          <label class="chip"><input type="radio" name="x01" value="701"> 701</label>
+          <label class="chip"><input type="radio" name="x01" value="901"> 901</label>
+          <label class="chip"><input type="checkbox" id="doubleOut"> Double-out</label>
+          <label class="chip"><input type="checkbox" id="soundToggle"> Číst hodnoty</label>
+        </div>
         <h3>Hody (vyber násobek a hodnotu)</h3>
         <div class="chips" id="multiplier">
           <button class="chip active" data-mul="1">Single</button>
@@ -370,11 +380,27 @@ function bindSettingsUI(){ const sel=document.getElementById('themeSelect'); if(
 function updateUI(){ document.body.classList.toggle('playing', isInProgress()); updateSticky(); updateTopBar(); renderTips(); }
 
 // Init
+function bindGameOptions(){
+  const box=document.getElementById('gameOptions'); if(!box) return;
+  box.addEventListener('change',(e)=>{
+    const t=e.target; if(!(t instanceof HTMLInputElement)) return;
+    if(t.name==='x01'){ setGame(Number(t.value)); syncGameOptionsUI(); }
+    if(t.id==='doubleOut'){ toggleDoubleOut(t.checked); }
+    if(t.id==='soundToggle'){ toggleSound(t.checked); }
+  });
+}
+function syncGameOptionsUI(){
+  const cur=String(state.startingScore);
+  document.querySelectorAll('input[name="x01"]').forEach(r=>{ r.checked = (r.value===cur); });
+  const d=document.getElementById('doubleOut'); if(d) d.checked=!!state.doubleOut;
+  const s=document.getElementById('soundToggle'); if(s) s.checked=!!state.soundOn;
+}
+
 function buildKeypad(){ const pad=document.getElementById('keypad'); pad.innerHTML=''; const nums=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,25,50]; nums.forEach(n=>{ const b=document.createElement('button'); b.className='key'; b.textContent=n; b.addEventListener('click',()=>enterScore(n)); pad.appendChild(b); }); const miss=document.createElement('button'); miss.className='key miss'; miss.textContent='Miss'; miss.addEventListener('click',()=>enterScore(0,1)); pad.appendChild(miss); }
 function setupMultiplierChips(){ const box=document.getElementById('multiplier'); box.querySelectorAll('.chip').forEach(ch=>{ ch.addEventListener('click',()=>{ box.querySelectorAll('.chip').forEach(c=>c.classList.remove('active')); ch.classList.add('active'); state.multiplier=Number(ch.dataset.mul); saveActive(); }); }); }
 
-buildKeypad(); setupMultiplierChips(); renderPlayers(); renderLiveHistory(); updateTurnInfo(); applySettings(); bindSettingsUI();
-const saved=loadActive(); if(saved && saved.players && saved.players.length){ state.startingScore=saved.startingScore??state.startingScore; state.doubleOut=!!saved.doubleOut; state.players=saved.players; state.currentIndex=saved.currentIndex||0; state.leg=saved.leg||state.leg; renderPlayers(); renderLiveHistory(); updateTurnInfo(); }
+buildKeypad(); setupMultiplierChips(); bindGameOptions(); renderPlayers(); renderLiveHistory(); updateTurnInfo(); applySettings(); bindSettingsUI(); syncGameOptionsUI();
+const saved=loadActive(); if(saved && saved.players && saved.players.length){ state.startingScore=saved.startingScore??state.startingScore; state.doubleOut=!!saved.doubleOut; state.players=saved.players; state.currentIndex=saved.currentIndex||0; state.leg=saved.leg||state.leg; renderPlayers(); renderLiveHistory(); updateTurnInfo(); syncGameOptionsUI(); }
 updateUI();
 </script>
 </body>

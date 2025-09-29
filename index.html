@@ -5,44 +5,87 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>Šipky – zapis skóre</title>
   <style>
+    /* ------------------------------
+       TÉMATA A PROMĚNNÉ
+       ------------------------------ */
     :root{
-      --bg:#0f1220;--fg:#e8ebf8;--muted:#aeb3c7;--card:#171a2b;--accent:#6ee7ff;--accent2:#9bff6e;--danger:#ff6e6e;--warn:#ffd56e;
+      /* výchozí (dark-neon) */
+      --bg1:#0b0e1a; --bg2:#12152a;
+      --fg:#e8ebf8; --muted:#aeb3c7;
+      --card:#171a2b; --border:#2d3353;
+      --accent:#6ee7ff; --accent2:#9bff6e;
+      --danger:#ff6e6e; --warn:#ffd56e;
+
+      /* barvy násobků */
+      --mul1:#0f142f; /* single */
+      --mul2:#10321f; /* double */
+      --mul3:#3a1a12; /* triple */
+
       --shadow:0 10px 30px rgba(0,0,0,.35);
     }
+    body.theme-light{
+      --bg1:#f6f8ff; --bg2:#e9eefb; --fg:#0f1230; --muted:#4b5070;
+      --card:#ffffff; --border:#cfd6f1; --accent:#1e60ff; --accent2:#0fb66f;
+      --danger:#e54747; --warn:#d9a000;
+      --mul1:#eef2ff; --mul2:#e6fff0; --mul3:#fff0ea;
+    }
+    body.theme-contrast{
+      --bg1:#000000; --bg2:#000000; --fg:#ffffff; --muted:#d0d0d0;
+      --card:#000000; --border:#ffffff; --accent:#ffff00; --accent2:#00ff88;
+      --danger:#ff0033; --warn:#ffcc00;
+      --mul1:#111111; --mul2:#002b11; --mul3:#2b0000;
+    }
+
+    /* ------------------------------
+       ZÁKLADNÍ STYL
+       ------------------------------ */
     *{box-sizing:border-box}
     html,body{height:100%}
-    body{margin:0;background:linear-gradient(180deg,#0b0e1a,#12152a 40%,#0b0e1a);color:var(--fg);font:16px/1.4 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica, Arial}
+    body{margin:0;background:linear-gradient(180deg,var(--bg1),var(--bg2) 40%,var(--bg1));color:var(--fg);font:16px/1.4 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica, Arial}
     a{color:var(--accent)}
-    .wrap{max-width:1100px;margin:0 auto;padding:16px 16px 80px}
-    header{position:sticky;top:0;z-index:5;background:linear-gradient(180deg,#0b0e1a 60%,rgba(11,14,26,0));backdrop-filter:saturate(120%) blur(4px);display:flex;gap:12px;align-items:center;justify-content:space-between;margin:0 0 16px;padding-top:8px}
+    .wrap{max-width:1100px;margin:0 auto;padding:16px 16px 100px}
+
+    header{position:sticky;top:0;z-index:5;background:linear-gradient(180deg,var(--bg1) 70%,rgba(0,0,0,0));backdrop-filter:saturate(120%) blur(4px);display:flex;gap:12px;align-items:center;justify-content:space-between;margin:0 0 16px;padding-top:8px}
     .title{font-weight:800;letter-spacing:.3px;font-size:20px;display:flex;align-items:center;gap:10px}
-    .pill{background:var(--card);border:1px solid #2d3353;border-radius:14px;padding:6px 10px;color:var(--muted)}
+    .pill{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:6px 10px;color:var(--muted)}
+
     .row{display:flex;gap:12px;flex-wrap:wrap}
-    .col{background:var(--card);border:1px solid #2d3353;border-radius:18px;padding:14px;box-shadow:var(--shadow)}
+    .col{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:14px;box-shadow:var(--shadow)}
     .col h3{margin:6px 0 12px;font-size:16px}
     .grow{flex:1 1 360px}
     .side{flex:0 1 320px}
+
     .controls{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
-    select, input[type="text"], input[type="number"], button{background:#0e1121;color:var(--fg);border:1px solid #2d3353;border-radius:12px;padding:10px 12px;font:inherit}
+    select, input[type="text"], input[type="number"], button{background:#0e1121;color:var(--fg);border:1px solid var(--border);border-radius:12px;padding:10px 12px;font:inherit}
+    body.theme-light select, body.theme-light input, body.theme-light button{background:#fff}
     input::placeholder{color:#8087a8}
     button{cursor:pointer;transition:transform .05s ease, background .2s}
     button:hover{transform:translateY(-1px)}
     button.primary{background:linear-gradient(180deg,#1a2a5a,#15224a);border-color:#35407a}
+    body.theme-light button.primary{background:linear-gradient(180deg,#2a6bff,#1d4fd8);color:white;border-color:#2a6bff}
     button.ghost{background:transparent}
     button.warn{background:#402b00;border-color:#6d4a00}
     button.danger{background:#3a0b0b;border-color:#652828}
+    button[disabled]{opacity:.5;cursor:not-allowed}
 
     .keypad{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
-    .key{padding:14px 0;text-align:center;border-radius:12px;border:1px solid #2d3353;background:#101431;font-weight:800;font-size:18px}
+    .key{padding:14px 0;text-align:center;border-radius:12px;border:1px solid var(--border);background:#101431;font-weight:800;font-size:18px}
+    body.theme-light .key{background:#f7f8ff}
     .key.miss{background:#2a1420}
 
     .chips{display:flex;gap:8px;flex-wrap:wrap}
-    .chip{padding:8px 12px;border-radius:999px;border:1px solid #2d3353;background:#0f142f;cursor:pointer;user-select:none}
+    .chip{padding:8px 12px;border-radius:999px;border:1px solid var(--border);background:#0f142f;cursor:pointer;user-select:none}
     .chip input{margin-right:6px}
     .chip.active{outline:2px solid var(--accent);}
 
+    /* barevné multiplikátory */
+    body.color-keys #multiplier .chip[data-mul="1"]{background:var(--mul1)}
+    body.color-keys #multiplier .chip[data-mul="2"]{background:var(--mul2)}
+    body.color-keys #multiplier .chip[data-mul="3"]{background:var(--mul3)}
+
     .players{display:flex;flex-direction:column;gap:8px}
-    .player{display:flex;align-items:center;gap:8px;justify-content:space-between;background:#121634;border:1px solid #2d3353;border-radius:12px;padding:10px}
+    .player{display:flex;align-items:center;gap:8px;justify-content:space-between;background:#121634;border:1px solid var(--border);border-radius:12px;padding:10px}
+    body.theme-light .player{background:#f6f7ff}
     .player .name{font-weight:700}
     .player .score{font-variant-numeric:tabular-nums;font-size:18px}
 
@@ -50,17 +93,26 @@
     .turn .dot{width:8px;height:8px;border-radius:50%;background:#3a416b}
 
     .tabs{display:flex;gap:6px}
-    .tab{padding:8px 10px;border-radius:10px;border:1px solid #2d3353;background:#0e1229;cursor:pointer}
+    .tab{padding:8px 10px;border-radius:10px;border:1px solid var(--border);background:#0e1229;cursor:pointer}
     .tab.active{outline:2px solid var(--accent)}
 
-    .history{max-height:340px;overflow:auto;border-radius:12px;border:1px solid #2d3353;background:#0b0e1f}
+    .history{max-height:340px;overflow:auto;border-radius:12px;border:1px solid var(--border);background:#0b0e1f}
+    body.theme-light .history{background:#ffffff}
     .hist-row{padding:8px 12px;border-bottom:1px solid #242a4a}
     .hist-row:last-child{border-bottom:none}
 
     .table{width:100%;border-collapse:collapse}
-    .table th,.table td{padding:8px;border-bottom:1px solid #2d3353;text-align:left}
+    .table th,.table td{padding:8px;border-bottom:1px solid var(--border);text-align:left}
     .muted{color:var(--muted)}
     .small{font-size:12px}
+
+    /* Minimální UI během hry (mobil) */
+    body.minimal.playing .hide-during-play{display:none !important}
+
+    /* Lepivý informační panel dole */
+    .stickybar{position:fixed;left:0;right:0;bottom:0;padding:10px 14px;background:rgba(0,0,0,.65);color:#fff;border-top:1px solid var(--border);display:none}
+    body.theme-light .stickybar{background:rgba(255,255,255,.92);color:#14203b}
+    body.sticky-info .stickybar{display:block}
 
     /* Mobilní úpravy */
     @media (max-width: 800px){
@@ -79,7 +131,7 @@
     }
   </style>
 </head>
-<body>
+<body class="theme-dark color-keys sticky-info minimal">
 <div class="wrap">
   <header>
     <div class="title">🎯 <span>Šipky – zapis skóre</span><span class="pill" id="statusPill">Připraveno</span></div>
@@ -99,15 +151,15 @@
         <div class="players" id="players"></div>
         <div class="controls" style="margin-top:10px">
           <input id="newPlayerName" placeholder="Jméno hráče" />
-          <button class="primary" onclick="addPlayer()">Přidat hráče</button>
-          <button class="warn" onclick="startNewLeg()">Nové kolo (leg)</button>
+          <button class="primary" id="addPlayerBtn" onclick="addPlayer()">Přidat hráče</button>
+          <button class="warn hide-during-play" onclick="startNewLeg()">Nové kolo (leg)</button>
           <button class="ghost" onclick="undoLastDart()">Zpět poslední hod</button>
         </div>
       </div>
 
       <div class="col grow">
         <h3>Volba hry</h3>
-        <div class="chips" style="margin-bottom:8px">
+        <div class="chips hide-during-play" style="margin-bottom:8px" id="gameOptions">
           <label class="chip"><input type="radio" name="x01" value="101" onchange="setGame(101)"/> 101</label>
           <label class="chip"><input type="radio" name="x01" value="301" checked onchange="setGame(301)"/> 301</label>
           <label class="chip"><input type="radio" name="x01" value="501" onchange="setGame(501)"/> 501</label>
@@ -127,12 +179,12 @@
             <div class="keypad" style="margin-top:10px" id="keypad"></div>
             <div class="chips" style="margin-top:8px">
               <button class="chip" onclick="enterScore(0,1)">Chyba (0)</button>
-              <button class="chip" onclick="finishTurn()">Ukončit tah</button>
+              <button class="chip" style="outline:2px solid var(--accent2)" onclick="finishTurn()">Ukončit tah</button>
             </div>
             <div class="turn small" id="turnInfo"><span class="dot"></span>Na tahu: –</div>
           </div>
 
-          <div class="col side">
+          <div class="col side hide-during-play">
             <h3>Průběh kola</h3>
             <div class="history" id="liveHistory"></div>
           </div>
@@ -176,18 +228,31 @@
   <!-- SETTINGS TAB -->
   <section data-panel="settings" hidden>
     <div class="col grow">
+      <h3>Vzhled &amp; rozhraní</h3>
+      <div class="controls" style="grid-template-columns:repeat(2,minmax(0,1fr));max-width:680px">
+        <label> Téma
+          <select id="themeSelect">
+            <option value="theme-dark">Tmavé (Neon)</option>
+            <option value="theme-light">Světlé</option>
+            <option value="theme-contrast">Vysoký kontrast</option>
+          </select>
+        </label>
+        <label><input type="checkbox" id="colorizeKeys" checked/> Barevně odlišit Single/Double/Triple</label>
+        <label><input type="checkbox" id="minimalUi" checked/> Minimal UI během hry (skryje nepotřebná tlačítka)</label>
+        <label><input type="checkbox" id="stickyBarToggle" checked/> Pevný panel skóre dole</label>
+      </div>
+      <p class="small muted">Během hry je zakázáno přidávat hráče (pro přidání ukončete leg, nebo začněte nový před prvním hodem).</p>
       <h3>Soubory pro čtení hodnot</h3>
-      <p class="muted small">Umístěte své zvukové soubory do složky <code>audio/</code> vedle této stránky. Názvy: <code>1.mp3</code>, <code>2.mp3</code>, …, <code>180.mp3</code>. Bude se přehrávat výsledná hodnota (násobek × číslo), např. triple 20 → 60.mp3. Pro bull se používá 25 a 50.</p>
+      <p class="muted small">Umístěte své zvukové soubory do složky <code>audio/</code> vedle této stránky. Názvy: <code>1.mp3</code>, <code>2.mp3</code>, …, <code>180.mp3</code>. Hraje se výsledná hodnota (násobek × číslo). Pro bull: 25 a 50.</p>
       <div class="controls" style="max-width:520px;margin-top:10px">
         <label><input type="checkbox" id="announceEveryClick" checked/> Přehrávat při každém kliku</label>
         <label><input type="checkbox" id="announceTurnTotal"/> Přečíst součet tří hodů na konci tahu (pokud existuje soubor)</label>
       </div>
-      <h3>Další</h3>
-      <p class="small muted">Data se ukládají do <code>localStorage</code> pod klíčem <code>dartsHistoryV1</code>.</p>
     </div>
   </section>
 </div>
 
+<div class="stickybar" id="stickyBar">—</div>
 <audio id="voice" preload="auto"></audio>
 
 <script>
@@ -199,10 +264,11 @@ const state = {
   doubleOut: false,
   soundOn: true,
   players: [], // {id, name, remaining, turnThrows:[], wins}
-  currentIndex: 0, // index hráče na tahu
-  leg: { id: ts(), turns: [] }, // turn = {playerId, darts:[{base,mul,score}], turnTotal,bust, remainingAfter}
-  history: loadHistory(), // {players:[{id,name,wins}], legs:[{id, turns:[], winnerId, startingScore, doubleOut, createdAt}]}
+  currentIndex: 0,
+  leg: { id: ts(), turns: [] },
+  history: loadHistory(),
   multiplier: 1,
+  settings: loadSettings(),
 };
 
 function ts(){ return Date.now(); }
@@ -214,6 +280,11 @@ function loadHistory(){
 function saveHistory(){
   localStorage.setItem('dartsHistoryV1', JSON.stringify(state.history));
 }
+function loadSettings(){
+  try{ return JSON.parse(localStorage.getItem('dartsSettingsV1')) || { theme:'theme-dark', colorizeKeys:true, minimalUi:true, stickyBar:true }; }
+  catch(e){ return { theme:'theme-dark', colorizeKeys:true, minimalUi:true, stickyBar:true }; }
+}
+function saveSettings(){ localStorage.setItem('dartsSettingsV1', JSON.stringify(state.settings)); }
 
 // ------------------------
 // UI – panely
@@ -235,7 +306,12 @@ function setStatus(msg){ document.getElementById('statusPill').textContent = msg
 // ------------------------
 // Hráči a hra
 // ------------------------
+function isInProgress(){
+  return (state.leg && state.leg.turns && state.leg.turns.length>0) || state.players.some(p=>p.turnThrows && p.turnThrows.length>0);
+}
+
 function addPlayer(){
+  if(isInProgress()) { alert('Během hry nelze přidávat hráče. Ukončete leg, nebo začněte nový před prvním hodem.'); return; }
   const inp = document.getElementById('newPlayerName');
   const name = (inp.value||'').trim();
   if(!name) return;
@@ -251,6 +327,7 @@ function addPlayer(){
 }
 
 function removePlayer(id){
+  if(isInProgress()) { alert('Během hry nelze upravovat soupisku.'); return; }
   const idx = state.players.findIndex(p=>p.id===id);
   if(idx>-1){
     state.players.splice(idx,1);
@@ -260,6 +337,7 @@ function removePlayer(id){
 }
 
 function setGame(val){
+  if(isInProgress()) { alert('Nelze měnit typ hry v průběhu legu.'); return; }
   state.startingScore = Number(val);
   for(const p of state.players){ p.remaining = state.startingScore; p.turnThrows=[]; }
   state.leg = { id: ts(), turns: [] };
@@ -268,7 +346,7 @@ function setGame(val){
   setStatus(`Nastaveno ${state.startingScore}.`);
 }
 
-function toggleDoubleOut(on){ state.doubleOut = on; setStatus(`Double-out ${on?'zapnuto':'vypnuto'}.`); }
+function toggleDoubleOut(on){ if(isInProgress()){ alert('Double-out lze měnit jen před legem.'); document.getElementById('doubleOut').checked=state.doubleOut; return;} state.doubleOut = on; setStatus(`Double-out ${on?'zapnuto':'vypnuto'}.`); }
 function toggleSound(on){ state.soundOn = on; setStatus(`Čtení hodnot ${on?'zapnuto':'vypnuto'}.`); }
 
 function startNewLeg(){
@@ -279,6 +357,7 @@ function startNewLeg(){
   renderPlayers();
   renderLiveHistory();
   setStatus('Začíná nové kolo.');
+  updateUI();
 }
 
 function currentPlayer(){ return state.players[state.currentIndex]; }
@@ -296,21 +375,19 @@ function enterScore(base, mul){
   if(state.soundOn && document.getElementById('announceEveryClick').checked){ playNumber(score); }
 
   if(!player.turnThrows) player.turnThrows=[];
-  if(player.turnThrows.length>=3){
-    finishTurn();
-    return;
-  }
+  if(player.turnThrows.length>=3){ finishTurn(); return; }
   player.turnThrows.push({base, mul, score});
   renderPlayers();
   renderLiveHistory();
 
-  // po 3. hodu auto ukončit tah
   if(player.turnThrows.length===3){ finishTurn(); }
 
   // reset multiplikátoru na Single po každém zadání
   state.multiplier = 1;
   document.querySelectorAll('#multiplier .chip').forEach(c=>c.classList.remove('active'));
   document.querySelector('#multiplier .chip[data-mul="1"]').classList.add('active');
+
+  updateUI();
 }
 
 function finishTurn(){
@@ -318,8 +395,7 @@ function finishTurn(){
   if(!player) return;
   const darts = player.turnThrows||[];
 
-  // Pokud nebyl žádný hod a uživatel chce přeskakovat, prostě posuň hráče
-  if(darts.length===0){ nextPlayer(); renderPlayers(); updateTurnInfo(); return; }
+  if(darts.length===0){ nextPlayer(); renderPlayers(); updateTurnInfo(); updateSticky(); return; }
 
   const turnTotal = darts.reduce((a,d)=>a+d.score,0);
   let remaining = player.remaining - turnTotal;
@@ -332,9 +408,7 @@ function finishTurn(){
       if(last.mul!==2){ bust = true; remaining = player.remaining; }
     }
   }
-  else if(state.doubleOut && remaining===1){ // nelze nechat 1 při double-out
-    bust = true; remaining = player.remaining;
-  }
+  else if(state.doubleOut && remaining===1){ bust = true; remaining = player.remaining; }
 
   if(!bust){ player.remaining = remaining; }
 
@@ -343,7 +417,6 @@ function finishTurn(){
 
   if(state.soundOn && document.getElementById('announceTurnTotal').checked){ playNumber(turnTotal); }
 
-  // vítěz
   if(player.remaining===0){
     const winnerId = player.id;
     state.history.legs.push({ ...state.leg, winnerId });
@@ -354,16 +427,17 @@ function finishTurn(){
     setStatus(`Vítěz: ${player.name}`);
     startNewLeg();
     renderLeaderboard();
+    updateUI();
     return;
   }
 
-  // posun na dalšího
   player.turnThrows = [];
   nextPlayer();
   renderPlayers();
   renderLiveHistory();
   updateTurnInfo();
   saveHistory();
+  updateUI();
 }
 
 function undoLastDart(){
@@ -372,6 +446,7 @@ function undoLastDart(){
     p.turnThrows.pop();
     renderPlayers();
     renderLiveHistory();
+    updateUI();
     return;
   }
   const last = state.leg.turns[state.leg.turns.length-1];
@@ -379,12 +454,12 @@ function undoLastDart(){
   const idx = state.players.findIndex(pl=>pl.id===last.playerId);
   if(idx!==-1) state.currentIndex = idx;
   const pl = currentPlayer();
-  // vrácení stavu (zjednodušené)
   pl.remaining = last.bust ? pl.remaining : last.remainingAfter + last.turnTotal;
   pl.turnThrows = last.darts;
   state.leg.turns.pop();
   renderPlayers();
   renderLiveHistory();
+  updateUI();
 }
 
 // ------------------------
@@ -419,10 +494,16 @@ function renderPlayers(){
     box.appendChild(el);
   });
   updateTurnInfo();
+  updateSticky();
+  // zamezit přidávání během hry
+  const playing = isInProgress();
+  document.getElementById('newPlayerName').disabled = playing;
+  document.getElementById('addPlayerBtn').disabled = playing;
 }
 
 function renderLiveHistory(){
   const box = document.getElementById('liveHistory');
+  if(!box) return;
   box.innerHTML='';
   const p = currentPlayer();
   if(p && p.turnThrows && p.turnThrows.length){
@@ -442,6 +523,7 @@ function renderLiveHistory(){
 
 function renderFullHistory(){
   const box = document.getElementById('fullHistory');
+  if(!box) return;
   box.innerHTML='';
   if(state.history.legs.length===0){ box.innerHTML = '<div class="hist-row muted">Zatím žádná odehraná kola.</div>'; return; }
   state.history.legs.slice().reverse().forEach((leg,idx)=>{
@@ -462,6 +544,7 @@ function renderFullHistory(){
 
 function renderLeaderboard(){
   const tbody = document.querySelector('#leaderTable tbody');
+  if(!tbody) return;
   const arr = state.history.players.slice().sort((a,b)=>(b.wins||0)-(a.wins||0));
   tbody.innerHTML = arr.map((p,i)=>`<tr><td>${i+1}.</td><td>${escapeHtml(p.name)}</td><td>${p.wins||0}</td></tr>`).join('');
 }
@@ -470,6 +553,14 @@ function updateTurnInfo(){
   const el = document.getElementById('turnInfo');
   const p = currentPlayer();
   el.innerHTML = `<span class="dot"></span>Na tahu: <b>${p?escapeHtml(p.name):'–'}</b> • Zbývá: ${p?p.remaining:'–'}`;
+}
+
+function updateSticky(){
+  const bar = document.getElementById('stickyBar');
+  if(!bar) return;
+  const p = currentPlayer();
+  const throwTxt = p && p.turnThrows && p.turnThrows.length ? p.turnThrows.map(formatDartShort).join(', ') : '—';
+  bar.innerHTML = p ? `Na tahu: <b>${escapeHtml(p.name)}</b> • Zbývá: <b>${p.remaining}</b> • Hody: ${throwTxt}` : '—';
 }
 
 function formatDart(d){
@@ -523,6 +614,30 @@ function clearAll(){
 }
 
 // ------------------------
+// Nastavení vzhledu
+// ------------------------
+function applySettings(){
+  document.body.classList.remove('theme-dark','theme-light','theme-contrast');
+  document.body.classList.add(state.settings.theme);
+  document.body.classList.toggle('color-keys', !!state.settings.colorizeKeys);
+  document.body.classList.toggle('minimal', !!state.settings.minimalUi);
+  document.body.classList.toggle('sticky-info', !!state.settings.stickyBar);
+  updateUI();
+}
+
+function bindSettingsUI(){
+  const sel = document.getElementById('themeSelect'); if(sel){ sel.value = state.settings.theme; sel.onchange = ()=>{ state.settings.theme = sel.value; saveSettings(); applySettings(); }; }
+  const ck1 = document.getElementById('colorizeKeys'); if(ck1){ ck1.checked = !!state.settings.colorizeKeys; ck1.onchange=()=>{ state.settings.colorizeKeys = ck1.checked; saveSettings(); applySettings(); }; }
+  const ck2 = document.getElementById('minimalUi'); if(ck2){ ck2.checked = !!state.settings.minimalUi; ck2.onchange=()=>{ state.settings.minimalUi = ck2.checked; saveSettings(); applySettings(); }; }
+  const ck3 = document.getElementById('stickyBarToggle'); if(ck3){ ck3.checked = !!state.settings.stickyBar; ck3.onchange=()=>{ state.settings.stickyBar = ck3.checked; saveSettings(); applySettings(); }; }
+}
+
+function updateUI(){
+  document.body.classList.toggle('playing', isInProgress());
+  updateSticky();
+}
+
+// ------------------------
 // Init
 // ------------------------
 function buildKeypad(){
@@ -559,6 +674,9 @@ setupMultiplierChips();
 renderPlayers();
 renderLiveHistory();
 updateTurnInfo();
+applySettings();
+bindSettingsUI();
+updateUI();
 </script>
 </body>
 </html>

@@ -143,6 +143,7 @@
             <input id="newPlayerName" placeholder="Jméno hráče" />
             <button class="primary" id="addPlayerBtn" onclick="addPlayer()">Přidat hráče</button>
           </div>
+          <button class="primary hide-when-playing" onclick="startGameRandom()">Začít hru (náhodně)</button>
           <button class="warn hide-during-play" onclick="startNewLeg()">Nové kolo (leg)</button>
           <button class="ghost" onclick="undoLastDart()">Zpět poslední hod</button>
           <button class="danger" id="abortBtn" onclick="abortLeg()" title="Ukončit rozehranou hru">Ukončit hru</button>
@@ -291,7 +292,18 @@ function setGame(val){ if(isInProgress()){ alert('Nelze měnit typ hry v průbě
 function toggleDoubleOut(on){ if(isInProgress()){ alert('Double-out lze měnit jen před legem.'); document.getElementById('doubleOut').checked=state.doubleOut; return;} state.doubleOut=on; setStatus(`Double-out ${on?'zapnuto':'vypnuto'}.`); saveActive(); }
 function toggleSound(on){ state.soundOn=on; setStatus(`Čtení hodnot ${on?'zapnuto':'vypnuto'}.`); saveActive(); }
 function startNewLeg(){ if(state.players.length===0){ alert('Přidejte alespoň jednoho hráče.'); return; } for(const p of state.players){ p.remaining=state.startingScore; p.turnThrows=[]; } state.currentIndex=0; state.leg={ id:ts(), turns:[], startingScore:state.startingScore, doubleOut:state.doubleOut, createdAt:new Date().toISOString() }; renderPlayers(); renderLiveHistory(); setStatus('Začíná nové kolo.'); updateUI(); saveActive(); }
-function abortLeg(){ if(!isInProgress()){ alert('Není co ukončit.'); return; } if(!confirm('Ukončit rozehranou hru? Rozpracovaný leg bude uložen jako nedokončený.')) return; // uložit jako aborted
+function abortLeg(){
+  if(!isInProgress()){ alert('Není co ukončit.'); return; }
+  if(!confirm('Ukončit rozehranou hru? Rozpracovaný leg bude uložen jako nedokončený.')) return;
+  // uložit jako aborted
+  state.history.legs.push({ ...state.leg, aborted:true });
+  saveHistory();
+  // reset stavu a připravit nový prázdný leg
+  for(const p of state.players){ p.remaining=state.startingScore; p.turnThrows=[]; }
+  state.currentIndex=0;
+  state.leg={ id:ts(), turns:[], startingScore:state.startingScore, doubleOut:state.doubleOut, createdAt:new Date().toISOString() };
+  renderPlayers(); renderLiveHistory(); updateUI(); saveActive(); setStatus('Hra ukončena.');
+} if(!confirm('Ukončit rozehranou hru? Rozpracovaný leg bude uložen jako nedokončený.')) return; // uložit jako aborted
   state.history.legs.push({ ...state.leg, aborted:true }); saveHistory(); // reset stavu
   for(const p of state.players){ p.remaining=state.startingScore; p.turnThrows=[]; }
   state.currentIndex=0; state.leg={ id:ts(), turns:[], startingScore:state.startingScore, doubleOut:state.doubleOut, createdAt:new Date().toISOString() };
@@ -394,6 +406,22 @@ function bindSettingsUI(){ const sel=document.getElementById('themeSelect'); if(
   const ck5=document.getElementById('showTips'); if(ck5){ ck5.checked= state.settings.showTips!==false; ck5.onchange=()=>{ state.settings.showTips=ck5.checked; saveSettings(); renderTips(); }; }
 }
 function updateUI(){ document.body.classList.toggle('playing', isInProgress()); updateSticky(); updateTopBar(); renderTips(); }
+
+// Utility
+function shuffleArray(arr){ for(let i=arr.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; } }
+function startGameRandom(){
+  if(isInProgress()){
+    if(!confirm('Hra je rozjetá. Ukončit a začít novou s náhodným pořadím?')) return;
+    abortLeg(); // uloží nedokončený leg a resetuje skóre
+  }
+  if(state.players.length===0){ alert('Přidejte alespoň jednoho hráče.'); return; }
+  shuffleArray(state.players);
+  state.currentIndex = 0;
+  startNewLeg(); // založí nový leg s vylosovaným pořadím
+  setStatus('Začínáme – pořadí: '+ state.players.map(p=>p.name).join(', '));
+  renderPlayers();
+  saveActive();
+}
 
 // Init
 function bindGameOptions(){

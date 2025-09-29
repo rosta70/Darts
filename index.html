@@ -142,8 +142,9 @@
           <div class="hide-when-playing" style="display:contents">
             <input id="newPlayerName" placeholder="Jméno hráče" />
             <button class="primary" id="addPlayerBtn" onclick="addPlayer()">Přidat hráče</button>
+            <button class="primary" onclick="startGameRandom()">Začít hru (náhodně)</button>
+            <button class="ghost" onclick="startNewLeg()">Začít hru (aktuální pořadí)</button>
           </div>
-          <button class="primary hide-when-playing" onclick="startGameRandom()">Začít hru (náhodně)</button>
           <button class="warn hide-during-play" onclick="startNewLeg()">Nové kolo (leg)</button>
           <button class="ghost" onclick="undoLastDart()">Zpět poslední hod</button>
           <button class="danger" id="abortBtn" onclick="abortLeg()" title="Ukončit rozehranou hru">Ukončit hru</button>
@@ -159,8 +160,9 @@
           <label class="chip"><input type="radio" name="x01" value="701"> 701</label>
           <label class="chip"><input type="radio" name="x01" value="901"> 901</label>
           <label class="chip"><input type="checkbox" id="doubleOut"> Double-out</label>
-          <label class="chip"><input type="checkbox" id="soundToggle"> Číst hodnoty</label>
+          <label class="chip"><input type="checkbox" id="soundToggle" checked> Číst hodnoty</label>
         </div>
+
         <h3>Hody (vyber násobek a hodnotu)</h3>
         <div class="chips" id="multiplier">
           <button class="chip active" data-mul="1">Single</button>
@@ -259,14 +261,14 @@ window.addEventListener('appinstalled', ()=>{
   deferredPrompt = null;
   ['installBtn','installBtnHeader','installBtnSettings'].forEach(id=>{ const b=document.getElementById(id); if(b) b.style.display='none'; });
 });
-async function doInstall(){ if(!deferredPrompt){ alert('Instalace zatím není k dispozici.'); return; } deferredPrompt.prompt(); await deferredPrompt.userChoice; deferredPrompt = null; }
+function doInstall(){ if(!deferredPrompt){ alert('Instalace zatím není k dispozici.'); return; } deferredPrompt.prompt(); deferredPrompt.userChoice.then(()=>{ deferredPrompt=null; }); }
 ['installBtn','installBtnHeader','installBtnSettings'].forEach(id=>{ const b=document.getElementById(id); if(b) b.addEventListener('click', doInstall); });
 
 // TTS fallback
-let voices=[]; function loadVoices(){ try{ voices=speechSynthesis? speechSynthesis.getVoices():[]; }catch(e){ voices=[]; } }
-if('speechSynthesis' in window){ loadVoices(); if('onvoiceschanged' in speechSynthesis){ speechSynthesis.onvoiceschanged=loadVoices; } }
+let voices=[]; function loadVoices(){ try{ voices=window.speechSynthesis? window.speechSynthesis.getVoices():[]; }catch(e){ voices=[]; } }
+if('speechSynthesis' in window){ loadVoices(); if('onvoiceschanged' in window.speechSynthesis){ window.speechSynthesis.onvoiceschanged=loadVoices; } }
 function pickCzechVoice(){ if(!voices.length) return null; const by=(c)=>voices.find(v=>v.lang&&v.lang.toLowerCase().startsWith(c)); return by('cs')||by('sk')||by('pl')||voices[0]; }
-function speakText(t){ if(!document.getElementById('ttsFallback')?.checked) return; if(!('speechSynthesis' in window)) return; try{ const u=new SpeechSynthesisUtterance(String(t)); const v=pickCzechVoice(); if(v) u.voice=v; u.rate=1; u.pitch=1; u.volume=1; speechSynthesis.cancel(); speechSynthesis.speak(u);}catch(e){} }
+function speakText(t){ if(!document.getElementById('ttsFallback')?.checked) return; if(!('speechSynthesis' in window)) return; try{ const u=new SpeechSynthesisUtterance(String(t)); const v=pickCzechVoice(); if(v) u.voice=v; u.rate=1; u.pitch=1; u.volume=1; try{ if(window.speechSynthesis && typeof window.speechSynthesis.cancel==='function') window.speechSynthesis.cancel(); }catch(e){} window.speechSynthesis.speak(u);}catch(e){} }
 
 // Stav
 const state={ startingScore:301,doubleOut:false,soundOn:true,players:[],currentIndex:0,leg:{id:ts(),turns:[]},history:loadHistory(),multiplier:1,settings:loadSettings() };
@@ -277,6 +279,7 @@ function loadSettings(){ try{ return JSON.parse(localStorage.getItem('dartsSetti
 function saveSettings(){ localStorage.setItem('dartsSettingsV1', JSON.stringify(state.settings)); }
 function loadActive(){ try{ return JSON.parse(localStorage.getItem('dartsActiveV1'))||null; }catch(e){ return null; } }
 function saveActive(){ const snapshot={ startingScore:state.startingScore,doubleOut:state.doubleOut,players:state.players,currentIndex:state.currentIndex,leg:state.leg }; localStorage.setItem('dartsActiveV1', JSON.stringify(snapshot)); }
+function clearActive(){ localStorage.removeItem('dartsActiveV1'); }
 
 // Panely
 const panels=document.querySelectorAll('[data-panel]');
@@ -286,33 +289,31 @@ function setStatus(msg){ const el=document.getElementById('statusPill'); if(el) 
 
 // Hra
 function isInProgress(){ return (state.leg && state.leg.turns && state.leg.turns.length>0) || state.players.some(p=>p.turnThrows && p.turnThrows.length>0); }
-function addPlayer(){ if(isInProgress()){ alert('Během hry nelze přidávat hráče.'); return; } const inp=document.getElementById('newPlayerName'); const name=(inp.value||'').trim(); if(!name) return; const id='p'+ts(); const existing=state.history.players.find(p=>p.name.toLowerCase()===name.toLowerCase()); const wins=existing? (existing.wins||0):0; const player={id,name,wins,remaining:state.startingScore,turnThrows:[]}; state.players.push(player); if(!existing) state.history.players.push({id,name,wins}); inp.value=''; renderPlayers(); saveHistory(); saveActive(); if(state.players.length===1) setStatus('Přidejte další hráče nebo začněte házet.'); }
+function addPlayer(){ if(isInProgress()){ alert('Během hry nelze přidávat hráče.'); return; } const inp=document.getElementById('newPlayerName'); const name=(inp.value||'').trim(); if(!name) return; const id='p'+ts(); const existing=state.history.players.find(p=>p.name.toLowerCase()===name.toLowerCase()); const wins=existing? (existing.wins||0):0; const player={id,name,wins,remaining:state.startingScore,turnThrows:[]}; state.players.push(player); if(!existing) state.history.players.push({id,name,wins}); inp.value=''; renderPlayers(); saveHistory(); saveActive(); if(state.players.length===1) setStatus('Přidejte další hráče nebo začněte hru.'); }
 function removePlayer(id){ if(isInProgress()){ alert('Během hry nelze upravovat soupisku.'); return; } const idx=state.players.findIndex(p=>p.id===id); if(idx>-1){ state.players.splice(idx,1); if(state.currentIndex>=state.players.length) state.currentIndex=0; renderPlayers(); saveActive(); } }
 function setGame(val){ if(isInProgress()){ alert('Nelze měnit typ hry v průběhu legu.'); return; } state.startingScore=Number(val); for(const p of state.players){ p.remaining=state.startingScore; p.turnThrows=[]; } state.leg={id:ts(),turns:[]}; renderPlayers(); renderLiveHistory(); setStatus(`Nastaveno ${state.startingScore}.`); saveActive(); }
-function toggleDoubleOut(on){ if(isInProgress()){ alert('Double-out lze měnit jen před legem.'); document.getElementById('doubleOut').checked=state.doubleOut; return;} state.doubleOut=on; setStatus(`Double-out ${on?'zapnuto':'vypnuto'}.`); saveActive(); }
+function toggleDoubleOut(on){ if(isInProgress()){ alert('Double-out lze měnit jen před legem.'); const d=document.getElementById('doubleOut'); if(d) d.checked=state.doubleOut; return;} state.doubleOut=on; setStatus(`Double-out ${on?'zapnuto':'vypnuto'}.`); saveActive(); }
 function toggleSound(on){ state.soundOn=on; setStatus(`Čtení hodnot ${on?'zapnuto':'vypnuto'}.`); saveActive(); }
+
 function startNewLeg(){ if(state.players.length===0){ alert('Přidejte alespoň jednoho hráče.'); return; } for(const p of state.players){ p.remaining=state.startingScore; p.turnThrows=[]; } state.currentIndex=0; state.leg={ id:ts(), turns:[], startingScore:state.startingScore, doubleOut:state.doubleOut, createdAt:new Date().toISOString() }; renderPlayers(); renderLiveHistory(); setStatus('Začíná nové kolo.'); updateUI(); saveActive(); }
-function abortLeg(){
-  if(!isInProgress()){ alert('Není co ukončit.'); return; }
-  if(!confirm('Ukončit rozehranou hru? Rozpracovaný leg bude uložen jako nedokončený.')) return;
-  // uložit jako aborted
-  state.history.legs.push({ ...state.leg, aborted:true });
-  saveHistory();
-  // reset stavu a připravit nový prázdný leg
+function startGameRandom(){ if(state.players.length===0){ alert('Přidejte alespoň jednoho hráče.'); return; }
+  if(isInProgress()){ if(!confirm('Hra je rozjetá. Ukončit a začít novou s náhodným pořadím?')) return; // uložit nedokončený leg
+    state.history.legs.push({ ...state.leg, aborted:true }); saveHistory(); }
+  // zamíchat pořadí
+  shuffleArray(state.players);
+  // reset skóre a leg
   for(const p of state.players){ p.remaining=state.startingScore; p.turnThrows=[]; }
   state.currentIndex=0;
   state.leg={ id:ts(), turns:[], startingScore:state.startingScore, doubleOut:state.doubleOut, createdAt:new Date().toISOString() };
-  renderPlayers(); renderLiveHistory(); updateUI(); saveActive(); setStatus('Hra ukončena.');
-} if(!confirm('Ukončit rozehranou hru? Rozpracovaný leg bude uložen jako nedokončený.')) return; // uložit jako aborted
-  state.history.legs.push({ ...state.leg, aborted:true }); saveHistory(); // reset stavu
-  for(const p of state.players){ p.remaining=state.startingScore; p.turnThrows=[]; }
-  state.currentIndex=0; state.leg={ id:ts(), turns:[], startingScore:state.startingScore, doubleOut:state.doubleOut, createdAt:new Date().toISOString() };
-  renderPlayers(); renderLiveHistory(); updateUI(); saveActive(); setStatus('Hra ukončena.'); }
+  renderPlayers(); renderLiveHistory(); updateUI(); saveActive();
+  setStatus('Začínáme – pořadí: '+ state.players.map(p=>p.name).join(', '));
+}
+function abortLeg(){ if(!isInProgress()){ alert('Není co ukončit.'); return; } if(!confirm('Ukončit rozehranou hru? Rozpracovaný leg bude uložen jako nedokončený.')) return; state.history.legs.push({ ...state.leg, aborted:true }); saveHistory(); for(const p of state.players){ p.remaining=state.startingScore; p.turnThrows=[]; } state.currentIndex=0; state.leg={ id:ts(), turns:[], startingScore:state.startingScore, doubleOut:state.doubleOut, createdAt:new Date().toISOString() }; renderPlayers(); renderLiveHistory(); updateUI(); saveActive(); setStatus('Hra ukončena.'); }
 function currentPlayer(){ return state.players[state.currentIndex]; }
 function nextPlayer(){ state.currentIndex=(state.currentIndex+1)%state.players.length; }
 
 // Zvuk
-function playMp3OrTTS(path,ttsText){ if(!state.soundOn) return; const audio=document.getElementById('voice'); try{ speechSynthesis?.cancel?.(); }catch(e){} audio.onerror=()=>{ audio.onerror=null; if(ttsText) speakText(ttsText); }; audio.oncanplaythrough=()=>{ audio.oncanplaythrough=null; audio.play().catch(()=>{}); }; audio.src=path; audio.load(); }
+function playMp3OrTTS(path,ttsText){ if(!state.soundOn) return; const audio=document.getElementById('voice'); try{ if(window.speechSynthesis && typeof window.speechSynthesis.cancel==='function') window.speechSynthesis.cancel(); }catch(e){} audio.onerror=()=>{ audio.onerror=null; if(ttsText) speakText(ttsText); }; audio.oncanplaythrough=()=>{ audio.oncanplaythrough=null; audio.play().catch(()=>{}); }; audio.src=path; audio.load(); }
 function playNumber(n){ playMp3OrTTS(`audio/${n}.mp3`, String(n)); }
 function playWord(word){ const tts= word==='vyhra'? 'Výhra': (word==='bust'? 'Bust': word); playMp3OrTTS(`audio/${word}.mp3`, tts); }
 
@@ -321,7 +322,7 @@ function enterScore(base,mul){ mul=mul||state.multiplier; const player=currentPl
   if(!player.turnThrows) player.turnThrows=[]; if(player.turnThrows.length>=3){ finishTurn(); return; }
   player.turnThrows.push({base,mul,score}); renderPlayers(); renderLiveHistory(); renderTips();
   if(player.turnThrows.length===3){ finishTurn(); }
-  state.multiplier=1; document.querySelectorAll('#multiplier .chip').forEach(c=>c.classList.remove('active')); document.querySelector('#multiplier .chip[data-mul="1"]').classList.add('active');
+  state.multiplier=1; document.querySelectorAll('#multiplier .chip').forEach(c=>c.classList.remove('active')); const sbtn=document.querySelector('#multiplier .chip[data-mul="1"]'); if(sbtn) sbtn.classList.add('active');
   updateUI(); saveActive(); }
 
 function finishTurn(){ const player=currentPlayer(); if(!player) return; const darts=player.turnThrows||[]; if(darts.length===0){ nextPlayer(); renderPlayers(); updateTurnInfo(); updateSticky(); renderTips(); saveActive(); return; }
@@ -336,58 +337,18 @@ function finishTurn(){ const player=currentPlayer(); if(!player) return; const d
 
 function undoLastDart(){ const p=currentPlayer(); if(p && p.turnThrows && p.turnThrows.length>0){ p.turnThrows.pop(); renderPlayers(); renderLiveHistory(); updateUI(); renderTips(); saveActive(); return; } const last=state.leg.turns[state.leg.turns.length-1]; if(!last){ setStatus('Nic k vrácení.'); return; } const idx=state.players.findIndex(pl=>pl.id===last.playerId); if(idx!==-1) state.currentIndex=idx; const pl=currentPlayer(); pl.remaining= last.bust? pl.remaining : last.remainingAfter + last.turnTotal; pl.turnThrows=last.darts; state.leg.turns.pop(); renderPlayers(); renderLiveHistory(); updateUI(); renderTips(); saveActive(); }
 
-// Checkout tipy (jednoduchý generátor pro double-out)
+// Checkout tipy
 const UNFINISHABLE=new Set([169,168,166,165,163,162,159]);
 const TPR=[20,19,18,17,16,15];
-function suggestDoubleOut(rem){
-  const res=[]; if(rem>170||rem<=1||UNFINISHABLE.has(rem)) return res;
-  if(rem===50) return [['D25']];
-  if(rem%2===0 && rem<=40) return [[`D${rem/2}`]];
-  // 2-dart: T + D
-  for(const t of TPR){ const r=rem-3*t; if(r===50){ res.push([`T${t}`, 'D25']); break; } if(r>0 && r%2===0 && r<=40){ res.push([`T${t}`, `D${r/2}`]); if(res.length>=3) break; } }
-  if(res.length>=3) return res;
-  // 3-dart: T + S + D
-  outer: for(const t of TPR){ for(let s=20;s>=1;s--){ const r=rem-3*t - s; if(r===50){ res.push([`T${t}`, `S${s}`, 'D25']); } else if(r>0 && r%2===0 && r<=40){ res.push([`T${t}`, `S${s}`, `D${r/2}`]); }
-      if(res.length>=3) break outer; } }
-  if(res.length>=3) return res;
-  // 3-dart: T + T + D
-  for(const t1 of TPR){ for(const t2 of TPR){ const r=rem-3*t1-3*t2; if(r===50){ res.push([`T${t1}`,`T${t2}`,'D25']); } else if(r>0 && r%2===0 && r<=40){ res.push([`T${t1}`,`T${t2}`,`D${r/2}`]); } if(res.length>=3) break; } if(res.length>=3) break; }
-  return res; }
-function suggestSingleOut(rem){
-  const res=[]; if(rem<=0) return res; if(rem<=50){ if(rem===50) return [['Bull']]; return [[`S${rem}`]]; }
-  for(const t of TPR){ const r=rem-3*t; if(r>=0 && r<=50){ if(r===50) res.push([`T${t}`, 'Bull']); else res.push([`T${t}`, `S${r}`]); if(res.length>=3) break; } }
-  if(!res.length){ // setup: T to bring to 32/40/24 etc.
-    for(const t of TPR){ const r=rem-3*t; const targets=[40,32,24,16,8,2,50]; for(const d of targets){ const s=r-d; if(s>=0 && s<=20){ res.push([`T${t}`, `S${s}`, (d===50?'Bull':`S${d}`)]); break; } } if(res.length) break; }
-  }
-  return res;
-}
+function suggestDoubleOut(rem){ const res=[]; if(rem>170||rem<=1||UNFINISHABLE.has(rem)) return res; if(rem===50) return [['D25']]; if(rem%2===0 && rem<=40) return [[`D${rem/2}`]]; for(const t of TPR){ const r=rem-3*t; if(r===50){ res.push([`T${t}`, 'D25']); break; } if(r>0 && r%2===0 && r<=40){ res.push([`T${t}`, `D${r/2}`]); if(res.length>=3) break; } } if(res.length>=3) return res; outer: for(const t of TPR){ for(let s=20;s>=1;s--){ const r=rem-3*t - s; if(r===50){ res.push([`T${t}`, `S${s}`, 'D25']); } else if(r>0 && r%2===0 && r<=40){ res.push([`T${t}`, `S${s}`, `D${r/2}`]); } if(res.length>=3) break outer; } } if(res.length>=3) return res; for(const t1 of TPR){ for(const t2 of TPR){ const r=rem-3*t1-3*t2; if(r===50){ res.push([`T${t1}`,`T${t2}`,'D25']); } else if(r>0 && r%2===0 && r<=40){ res.push([`T${t1}`,`T${t2}`,`D${r/2}`]); } if(res.length>=3) break; } if(res.length>=3) break; } return res; }
+function suggestSingleOut(rem){ const res=[]; if(rem<=0) return res; if(rem<=50){ if(rem===50) return [['Bull']]; return [[`S${rem}`]]; } for(const t of TPR){ const r=rem-3*t; if(r>=0 && r<=50){ if(r===50) res.push([`T${t}`, 'Bull']); else res.push([`T${t}`, `S${r}`]); if(res.length>=3) break; } } if(!res.length){ for(const t of TPR){ const r=rem-3*t; const targets=[40,32,24,16,8,2,50]; for(const d of targets){ const s=r-d; if(s>=0 && s<=20){ res.push([`T${t}`, `S${s}`, (d===50?'Bull':`S${d}`)]); break; } } if(res.length) break; } } return res; }
 function getProjectedRemaining(p){ const used=(p.turnThrows||[]).reduce((a,d)=>a+d.score,0); return p.remaining - used; }
-function renderTips(){
-  const box=document.getElementById('checkoutTips');
-  const tipPill=document.getElementById('activeTopTip');
-  const showOpt=document.getElementById('showTips');
-  if(!box) return;
-  const showTips = showOpt ? showOpt.checked : true;
-  if(!showTips){ box.textContent=''; if(tipPill) tipPill.style.display='none'; return; }
-  const p=currentPlayer(); if(!p){ box.textContent=''; if(tipPill) tipPill.style.display='none'; return; }
-  const proj=getProjectedRemaining(p);
-  // Zobrazujeme tipy před koncem: DO <=170, SO <=120 (aby to nebylo moc brzy)
-  const limit = state.doubleOut ? 170 : 120;
-  if(proj<=0 || proj>limit || UNFINISHABLE.has(proj)){
-    box.textContent=''; if(tipPill) tipPill.style.display='none'; return;
-  }
-  const tips = state.doubleOut? suggestDoubleOut(proj): suggestSingleOut(proj);
-  if(!tips.length){ box.textContent=''; if(tipPill) tipPill.style.display='none'; return; }
-  const strings=tips.map(arr=>arr.join(' → '));
-  const text='Tipy: '+strings.join(' | ');
-  box.textContent = text;
-  if(tipPill){ tipPill.textContent = strings[0]; tipPill.style.display='inline-block'; }
-}
+function renderTips(){ const box=document.getElementById('checkoutTips'); const tipPill=document.getElementById('activeTopTip'); const showOpt=document.getElementById('showTips'); if(!box) return; const showTips = showOpt ? showOpt.checked : true; if(!showTips){ box.textContent=''; if(tipPill) tipPill.style.display='none'; return; } const p=currentPlayer(); if(!p){ box.textContent=''; if(tipPill) tipPill.style.display='none'; return; } const proj=getProjectedRemaining(p); const limit = state.doubleOut ? 170 : 120; if(proj<=0 || proj>limit || UNFINISHABLE.has(proj)){ box.textContent=''; if(tipPill) tipPill.style.display='none'; return; } const tips = state.doubleOut? suggestDoubleOut(proj): suggestSingleOut(proj); if(!tips.length){ box.textContent=''; if(tipPill) tipPill.style.display='none'; return; } const strings=tips.map(arr=>arr.join(' → ')); const text='Tipy: '+strings.join(' | '); box.textContent = text; if(tipPill){ tipPill.textContent = strings[0]; tipPill.style.display='inline-block'; } }
 
 // Renderování
-function renderPlayers(){ const box=document.getElementById('players'); box.innerHTML=''; state.players.forEach((p,i)=>{ const throwsText=p.turnThrows && p.turnThrows.length? ' ['+p.turnThrows.map(formatDartShort).join(', ')+']':''; const proj=(i===state.currentIndex)? getProjectedRemaining(p): null; const projTxt=(proj!==null && proj!==p.remaining)? ` <span class="small muted">(→ ${proj<0? 'BUST?': proj})</span>`:''; const el=document.createElement('div'); el.className='player'; el.innerHTML=`<div style="display:flex;align-items:center;gap:8px"><div class="pill" style="${i===state.currentIndex?'outline:2px solid var(--accent);':''}">${i===state.currentIndex?'▶️':''} ${i+1}</div><div class="name">${escapeHtml(p.name)}${throwsText}</div></div><div style="display:flex;align-items:center;gap:8px"><div class="score">${p.remaining}${projTxt}</div><button class="ghost hide-when-playing" title="Odebrat" onclick="removePlayer('${p.id}')">✖</button></div>`; box.appendChild(el); }); updateTurnInfo(); updateSticky(); updateTopBar(); const playing=isInProgress(); const nameInp=document.getElementById('newPlayerName'); const addBtn=document.getElementById('addPlayerBtn'); if(nameInp) nameInp.disabled=playing; if(addBtn) addBtn.disabled=playing; }
-function renderLiveHistory(){ const box=document.getElementById('liveHistory'); if(!box) return; box.innerHTML=''; const p=currentPlayer(); if(p && p.turnThrows && p.turnThrows.length){ const row=document.createElement('div'); row.className='hist-row'; row.innerHTML=`<div><b>${escapeHtml(p.name)}</b> – rozpracovaný tah: ${p.turnThrows.map(formatDart).join(', ')} (=${p.turnThrows.reduce((a,d)=>a+d.score,0)})</div>`; box.appendChild(row);} for(let i=state.leg.turns.length-1;i>=0;i--){ const t=state.leg.turns[i]; const row=document.createElement('div'); row.className='hist-row'; row.innerHTML=`<div><b>${escapeHtml(t.playerName)}</b> → ${t.darts.map(formatDart).join(', ')} <span class="muted">(=${t.turnTotal})</span> ${t.bust?'<span style="color:var(--warn)">BUST</span>':''} <span class="muted small">zůstatek: ${t.remainingAfter}</span></div>`; box.appendChild(row);} }
-function renderFullHistory(){ const box=document.getElementById('fullHistory'); if(!box) return; box.innerHTML=''; if(state.history.legs.length===0){ box.innerHTML='<div class="hist-row muted">Zatím žádná odehraná kola.</div>'; return; } state.history.legs.slice().reverse().forEach((leg,idx)=>{ const wrap=document.createElement('div'); wrap.className='hist-row'; const winner=state.history.players.find(p=>p.id===leg.winnerId); wrap.innerHTML=`<div><b>Leg #${state.history.legs.length-idx}</b> • start: ${leg.startingScore||'-'} • ${leg.doubleOut?'double-out':'standard'} ${leg.aborted?' • <span style="color:var(--warn)">ukončeno</span>':''} • vítěz: <b>${winner?escapeHtml(winner.name):'—'}</b> <span class="small muted">${new Date(leg.createdAt||Date.now()).toLocaleString()}</span></div>`; (leg.turns||[]).forEach(t=>{ const line=document.createElement('div'); line.className='small muted'; line.style.marginLeft='8px'; line.textContent=`${t.playerName}: ${t.darts.map(d=>`${d.mul}×${d.base}=${d.score}`).join(', ')} = ${t.turnTotal}${t.bust?' (BUST)':''} → ${t.remainingAfter}`; wrap.appendChild(line); }); box.appendChild(wrap); }); }
+function renderPlayers(){ const box=document.getElementById('players'); box.innerHTML=''; state.players.forEach((p,i)=>{ const throwsText=p.turnThrows && p.turnThrows.length? ' ['+p.turnThrows.map(formatDartShort).join(', ')+']':''; const proj=(i===state.currentIndex)? getProjectedRemaining(p): null; const projTxt=(proj!==null && proj!==p.remaining)? ` <span class=\"small muted\">(→ ${proj<0? 'BUST?': proj})</span>`:''; const el=document.createElement('div'); el.className='player'; el.innerHTML=`<div style=\"display:flex;align-items:center;gap:8px\"><div class=\"pill\" style=\"${i===state.currentIndex?'outline:2px solid var(--accent);':''}\">${i===state.currentIndex?'▶️':''} ${i+1}</div><div class=\"name\">${escapeHtml(p.name)}${throwsText}</div></div><div style=\"display:flex;align-items:center;gap:8px\"><div class=\"score\">${p.remaining}${projTxt}</div><button class=\"ghost hide-when-playing\" title=\"Odebrat\" onclick=\"removePlayer('${p.id}')\">✖</button></div>`; box.appendChild(el); }); updateTurnInfo(); updateSticky(); updateTopBar(); const playing=isInProgress(); const nameInp=document.getElementById('newPlayerName'); const addBtn=document.getElementById('addPlayerBtn'); if(nameInp) nameInp.disabled=playing; if(addBtn) addBtn.disabled=playing; }
+function renderLiveHistory(){ const box=document.getElementById('liveHistory'); if(!box) return; box.innerHTML=''; const p=currentPlayer(); if(p && p.turnThrows && p.turnThrows.length){ const row=document.createElement('div'); row.className='hist-row'; row.innerHTML=`<div><b>${escapeHtml(p.name)}</b> – rozpracovaný tah: ${p.turnThrows.map(formatDart).join(', ')} (=${p.turnThrows.reduce((a,d)=>a+d.score,0)})</div>`; box.appendChild(row);} for(let i=state.leg.turns.length-1;i>=0;i--){ const t=state.leg.turns[i]; const row=document.createElement('div'); row.className='hist-row'; row.innerHTML=`<div><b>${escapeHtml(t.playerName)}</b> → ${t.darts.map(formatDart).join(', ')} <span class=\"muted\">(=${t.turnTotal})</span> ${t.bust?'<span style=\"color:var(--warn)\">BUST</span>':''} <span class=\"muted small\">zůstatek: ${t.remainingAfter}</span></div>`; box.appendChild(row);} }
+function renderFullHistory(){ const box=document.getElementById('fullHistory'); if(!box) return; box.innerHTML=''; if(state.history.legs.length===0){ box.innerHTML='<div class="hist-row muted">Zatím žádná odehraná kola.</div>'; return; } state.history.legs.slice().reverse().forEach((leg,idx)=>{ const wrap=document.createElement('div'); wrap.className='hist-row'; const winner=state.history.players.find(p=>p.id===leg.winnerId); wrap.innerHTML=`<div><b>Leg #${state.history.legs.length-idx}</b> • start: ${leg.startingScore||'-'} • ${leg.doubleOut?'double-out':'standard'} ${leg.aborted?' • <span style=\"color:var(--warn)\">ukončeno</span>':''} • vítěz: <b>${winner?escapeHtml(winner.name):'—'}</b> <span class=\"small muted\">${new Date(leg.createdAt||Date.now()).toLocaleString()}</span></div>`; (leg.turns||[]).forEach(t=>{ const line=document.createElement('div'); line.className='small muted'; line.style.marginLeft='8px'; line.textContent=`${t.playerName}: ${t.darts.map(d=>`${d.mul}×${d.base}=${d.score}`).join(', ')} = ${t.turnTotal}${t.bust?' (BUST)':''} → ${t.remainingAfter}`; wrap.appendChild(line); }); box.appendChild(wrap); }); }
 function renderLeaderboard(){ const tbody=document.querySelector('#leaderTable tbody'); if(!tbody) return; const arr=state.history.players.slice().sort((a,b)=>(b.wins||0)-(a.wins||0)); tbody.innerHTML=arr.map((p,i)=>`<tr><td>${i+1}.</td><td>${escapeHtml(p.name)}</td><td>${p.wins||0}</td></tr>`).join(''); }
 function updateTurnInfo(){ const el=document.getElementById('turnInfo'); const p=currentPlayer(); if(!p){ el.textContent='—'; return; } const proj=getProjectedRemaining(p); const projStr= proj!==p.remaining? ` • Po hodech: ${proj<0? 'BUST?': proj}`:''; el.innerHTML=`<span class="dot"></span>Na tahu: <b>${escapeHtml(p.name)}</b> • Zbývá: ${p.remaining}${projStr}`; }
 function updateSticky(){ const bar=document.getElementById('stickyBar'); if(!bar) return; const p=currentPlayer(); const throwTxt=p && p.turnThrows && p.turnThrows.length ? p.turnThrows.map(formatDartShort).join(', '):'—'; const proj=p? getProjectedRemaining(p):null; const extra= (proj!==null && proj!==p.remaining)? ` → ${proj<0? 'BUST?': proj}`:''; bar.innerHTML= p? `Na tahu: <b>${escapeHtml(p.name)}</b> • Zbývá: <b>${p.remaining}</b>${extra} • Hody: ${throwTxt}`:'—'; }
@@ -405,41 +366,17 @@ function bindSettingsUI(){ const sel=document.getElementById('themeSelect'); if(
   const ck4=document.getElementById('ttsFallback'); if(ck4){ ck4.checked= state.settings.ttsFallback!==false; ck4.onchange=()=>{ state.settings.ttsFallback=ck4.checked; saveSettings(); }; }
   const ck5=document.getElementById('showTips'); if(ck5){ ck5.checked= state.settings.showTips!==false; ck5.onchange=()=>{ state.settings.showTips=ck5.checked; saveSettings(); renderTips(); }; }
 }
-function updateUI(){ document.body.classList.toggle('playing', isInProgress()); updateSticky(); updateTopBar(); renderTips(); }
+
+// Game options
+function bindGameOptions(){ const box=document.getElementById('gameOptions'); if(!box) return; box.addEventListener('change',(e)=>{ const t=e.target; if(!t || !t.tagName) return; if(t.tagName==='INPUT'){ const id=t.id||''; if(t.name==='x01'){ setGame(Number(t.value)); syncGameOptionsUI(); } else if(id==='doubleOut'){ toggleDoubleOut(t.checked); } else if(id==='soundToggle'){ toggleSound(t.checked); } } }); }
+function syncGameOptionsUI(){ const cur=String(state.startingScore); document.querySelectorAll('input[name="x01"]').forEach(r=>{ r.checked = (r.value===cur); }); const d=document.getElementById('doubleOut'); if(d) d.checked=!!state.doubleOut; const s=document.getElementById('soundToggle'); if(s) s.checked=!!state.soundOn; }
 
 // Utility
 function shuffleArray(arr){ for(let i=arr.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; } }
-function startGameRandom(){
-  if(isInProgress()){
-    if(!confirm('Hra je rozjetá. Ukončit a začít novou s náhodným pořadím?')) return;
-    abortLeg(); // uloží nedokončený leg a resetuje skóre
-  }
-  if(state.players.length===0){ alert('Přidejte alespoň jednoho hráče.'); return; }
-  shuffleArray(state.players);
-  state.currentIndex = 0;
-  startNewLeg(); // založí nový leg s vylosovaným pořadím
-  setStatus('Začínáme – pořadí: '+ state.players.map(p=>p.name).join(', '));
-  renderPlayers();
-  saveActive();
-}
+
+function updateUI(){ document.body.classList.toggle('playing', isInProgress()); updateSticky(); updateTopBar(); renderTips(); }
 
 // Init
-function bindGameOptions(){
-  const box=document.getElementById('gameOptions'); if(!box) return;
-  box.addEventListener('change',(e)=>{
-    const t=e.target; if(!(t instanceof HTMLInputElement)) return;
-    if(t.name==='x01'){ setGame(Number(t.value)); syncGameOptionsUI(); }
-    if(t.id==='doubleOut'){ toggleDoubleOut(t.checked); }
-    if(t.id==='soundToggle'){ toggleSound(t.checked); }
-  });
-}
-function syncGameOptionsUI(){
-  const cur=String(state.startingScore);
-  document.querySelectorAll('input[name="x01"]').forEach(r=>{ r.checked = (r.value===cur); });
-  const d=document.getElementById('doubleOut'); if(d) d.checked=!!state.doubleOut;
-  const s=document.getElementById('soundToggle'); if(s) s.checked=!!state.soundOn;
-}
-
 function buildKeypad(){ const pad=document.getElementById('keypad'); pad.innerHTML=''; const nums=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,25,50]; nums.forEach(n=>{ const b=document.createElement('button'); b.className='key'; b.textContent=n; b.addEventListener('click',()=>enterScore(n)); pad.appendChild(b); }); const miss=document.createElement('button'); miss.className='key miss'; miss.textContent='Miss'; miss.addEventListener('click',()=>enterScore(0,1)); pad.appendChild(miss); }
 function setupMultiplierChips(){ const box=document.getElementById('multiplier'); box.querySelectorAll('.chip').forEach(ch=>{ ch.addEventListener('click',()=>{ box.querySelectorAll('.chip').forEach(c=>c.classList.remove('active')); ch.classList.add('active'); state.multiplier=Number(ch.dataset.mul); saveActive(); }); }); }
 

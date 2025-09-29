@@ -120,6 +120,7 @@
       <span id="activeTopName" style="font-weight:800"></span>
       <span class="pill" id="activeTopRemain"></span>
       <span class="pill" id="activeTopThrows"></span>
+      <span class="pill" id="activeTopTip" style="display:none"></span>
       <button id="installBtnHeader" class="tab" style="margin-left:8px;display:none">Nainstalovat</button>
     </div>
 
@@ -349,11 +350,26 @@ function suggestSingleOut(rem){
   return res;
 }
 function getProjectedRemaining(p){ const used=(p.turnThrows||[]).reduce((a,d)=>a+d.score,0); return p.remaining - used; }
-function renderTips(){ const box=document.getElementById('checkoutTips'); if(!box) return; if(!document.getElementById('showTips')?.checked){ box.textContent=''; return; }
-  const p=currentPlayer(); if(!p){ box.textContent=''; return; } const proj=getProjectedRemaining(p); if(proj>170 || proj<=1 || UNFINISHABLE.has(proj)){ box.textContent=''; return; }
+function renderTips(){
+  const box=document.getElementById('checkoutTips');
+  const tipPill=document.getElementById('activeTopTip');
+  const showOpt=document.getElementById('showTips');
+  if(!box) return;
+  const showTips = showOpt ? showOpt.checked : true;
+  if(!showTips){ box.textContent=''; if(tipPill) tipPill.style.display='none'; return; }
+  const p=currentPlayer(); if(!p){ box.textContent=''; if(tipPill) tipPill.style.display='none'; return; }
+  const proj=getProjectedRemaining(p);
+  // Zobrazujeme tipy před koncem: DO <=170, SO <=120 (aby to nebylo moc brzy)
+  const limit = state.doubleOut ? 170 : 120;
+  if(proj<=0 || proj>limit || UNFINISHABLE.has(proj)){
+    box.textContent=''; if(tipPill) tipPill.style.display='none'; return;
+  }
   const tips = state.doubleOut? suggestDoubleOut(proj): suggestSingleOut(proj);
-  if(!tips.length){ box.textContent=''; return; }
-  const strings=tips.map(arr=>arr.join(' → ')); box.textContent='Tipy: '+strings.join(' | ');
+  if(!tips.length){ box.textContent=''; if(tipPill) tipPill.style.display='none'; return; }
+  const strings=tips.map(arr=>arr.join(' → '));
+  const text='Tipy: '+strings.join(' | ');
+  box.textContent = text;
+  if(tipPill){ tipPill.textContent = strings[0]; tipPill.style.display='inline-block'; }
 }
 
 // Renderování

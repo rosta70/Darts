@@ -15,24 +15,29 @@
     }
     body.theme-light{ --bg1:#f6f8ff; --bg2:#e9eefb; --fg:#0f1230; --muted:#4b5070; --card:#ffffff; --border:#cfd6f1; --accent:#1e60ff; --accent2:#0fb66f; --danger:#e54747; --warn:#d9a000; --mul1:#eef2ff; --mul2:#e6fff0; --mul3:#fff0ea; }
     body.theme-contrast{ --bg1:#000; --bg2:#000; --fg:#fff; --muted:#d0d0d0; --card:#000; --border:#fff; --accent:#ff0; --accent2:#0f8; --danger:#f03; --warn:#fc0; --mul1:#111; --mul2:#002b11; --mul3:#2b0000; }
+
     *{box-sizing:border-box}
     html,body{height:100%}
     body{margin:0;background:linear-gradient(180deg,var(--bg1),var(--bg2) 40%,var(--bg1));color:var(--fg);font:16px/1.4 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica, Arial}
     a{color:var(--accent)}
     .wrap{max-width:1100px;margin:0 auto;padding:16px 16px 110px}
+
     header{position:sticky;top:0;z-index:5;background:linear-gradient(180deg,var(--bg1) 90%,rgba(0,0,0,0));backdrop-filter:saturate(120%) blur(4px);display:flex;gap:12px;align-items:center;justify-content:space-between;margin:0 0 10px;padding:8px 0 10px}
     .brand{display:flex;align-items:center;gap:10px}
     .brand-title{font-weight:800;letter-spacing:.3px;font-size:20px}
     .pill{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:6px 10px;color:var(--muted)}
+
     .activeTop{display:none;align-items:center;gap:10px;padding:10px 12px;border-radius:16px;border:3px solid var(--accent);background:linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));box-shadow:0 0 0 3px rgba(110,231,255,0.2), 0 6px 20px rgba(0,0,0,0.35)}
     .activeTop .dot{width:12px;height:12px;border-radius:50%;background:var(--accent2);box-shadow:0 0 10px var(--accent2)}
     body.playing .brand{display:none}
     body.playing .activeTop{display:flex}
+
     .row{display:flex;gap:12px;flex-wrap:wrap}
     .col{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:14px;box-shadow:var(--shadow)}
     .col h3{margin:6px 0 12px;font-size:16px}
     .grow{flex:1 1 360px}
     .side{flex:0 1 320px}
+
     .controls{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
     select, input[type=text], input[type=range], button{background:#0e1121;color:var(--fg);border:1px solid var(--border);border-radius:12px;padding:10px 12px;font:inherit}
     body.theme-light select, body.theme-light input, body.theme-light button{background:#fff}
@@ -44,37 +49,48 @@
     button.warn{background:#402b00;border-color:#6d4a00}
     button.danger{background:#3a0b0b;border-color:#652828}
     button[disabled]{opacity:.5;cursor:not-allowed}
+
     .keypad{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
     .key{padding:14px 0;text-align:center;border-radius:12px;border:1px solid var(--border);background:#101431;font-weight:800;font-size:18px}
     body.theme-light .key{background:#f7f8ff}
     .key.miss{background:#2a1420}
+
     .chips{display:flex;gap:8px;flex-wrap:wrap}
     .chip{padding:8px 12px;border-radius:999px;border:1px solid var(--border);background:#0f142f;cursor:pointer;user-select:none}
     .chip input{margin-right:6px}
     .chip.active{outline:2px solid var(--accent)}
+
     body.color-keys #multiplier .chip[data-mul="1"]{background:var(--mul1)}
     body.color-keys #multiplier .chip[data-mul="2"]{background:var(--mul2)}
     body.color-keys #multiplier .chip[data-mul="3"]{background:var(--mul3)}
+
     .players{display:flex;flex-direction:column;gap:8px}
     .player{display:flex;align-items:center;gap:8px;justify-content:space-between;background:#121634;border:1px solid var(--border);border-radius:12px;padding:10px}
     body.theme-light .player{background:#f6f7ff}
     .player .name{font-weight:700}
     .player .score{font-variant-numeric:tabular-nums;font-size:18px}
+
     .muted{color:var(--muted)}
     .small{font-size:12px}
+
     .tabs{display:flex;gap:6px}
     .tab{padding:8px 10px;border-radius:10px;border:1px solid var(--border);background:#0e1229;cursor:pointer}
     .tab.active{outline:2px solid var(--accent)}
+
     .history{max-height:340px;overflow:auto;border-radius:12px;border:1px solid var(--border);background:#0b0e1f}
     body.theme-light .history{background:#fff}
     .hist-row{padding:8px 12px;border-bottom:1px solid #242a4a}
     .hist-row:last-child{border-bottom:none}
+
     body.playing .hide-when-playing{display:none!important}
     body.minimal.playing .hide-during-play{display:none!important}
+
     .stickybar{position:fixed;left:0;right:0;bottom:0;padding:10px 14px;background:rgba(0,0,0,.65);color:#fff;border-top:1px solid var(--border);display:none}
     body.theme-light .stickybar{background:rgba(255,255,255,.92);color:#14203b}
     body.sticky-info .stickybar{display:block}
+
     .tip{display:inline-block;margin-top:6px;padding:6px 10px;border:1px dashed var(--border);border-radius:10px}
+
     @media (max-width: 800px){
       .controls{grid-template-columns:repeat(2,minmax(0,1fr))}
       .side{flex:1 1 100%}
@@ -89,12 +105,56 @@
       .chip{padding:10px 12px}
       .brand-title{font-size:18px}
     }
+
     #activeTopName{font-size:22px;font-weight:900;letter-spacing:.3px;text-transform:uppercase}
     #activeTopRemain, #activeTopThrows, #activeTopTip{font-size:16px}
 
-    /* Error banner */
-    #errbar{position:fixed;z-index:9999;left:10px;right:10px;bottom:10px;background:#300;border:2px solid #f88;color:#fff;padding:8px 10px;border-radius:10px;font:12px/1.3 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;display:none}
-    #errbar b{color:#ffb3b3}
+    /* === Světlé téma – lepší kontrast prvků === */
+    body.theme-light .tab{background:#eef3ff}
+    body.theme-light .chip{background:#ffffff}
+    body.theme-light #multiplier .chip[data-mul="1"]{background:var(--mul1)}
+    body.theme-light #multiplier .chip[data-mul="2"]{background:var(--mul2)}
+    body.theme-light #multiplier .chip[data-mul="3"]{background:var(--mul3)}
+    body.theme-light .player{background:#ffffff}
+    body.theme-light .key{background:#f7f9ff}
+    body.theme-light .key.miss{background:#ffe8ee}
+    body.theme-light .history{background:#ffffff}
+    body.theme-light button{border-color:#cfd6f1;color:#0f1230}
+    body.theme-light button.primary{background:linear-gradient(180deg,#f0f4ff,#e3e9ff);border-color:#b9d1ff;color:#0f1230}
+    body.theme-light button.warn{background:#fff4d6;border-color:#e8c66a;color:#5a3b00}
+    body.theme-light button.danger{background:#ffe5e5;border-color:#f5a3a3;color:#7a1a1a}
+
+    /* světelná témata – viditelnost hráčů */
+    body.theme-light .col,
+    body.theme-light-blue .col,
+    body.theme-light-mint .col,
+    body.theme-light-rose .col,
+    body.theme-light-sand .col,
+    body.theme-contrast .col{ background:#ffffff; border-color:var(--border); }
+    body.theme-light .player,
+    body.theme-light-blue .player,
+    body.theme-light-mint .player,
+    body.theme-light-rose .player,
+    body.theme-light-sand .player,
+    body.theme-contrast .player{ background:#ffffff; border-color:#cfd6f1; color:#0f1230; }
+    body.theme-light .player .name,
+    body.theme-light .player .score,
+    body.theme-light-blue .player .name,
+    body.theme-light-blue .player .score,
+    body.theme-light-mint .player .name,
+    body.theme-light-mint .player .score,
+    body.theme-light-rose .player .name,
+    body.theme-light-rose .player .score,
+    body.theme-light-sand .player .name,
+    body.theme-light-sand .player .score,
+    body.theme-contrast .player .name,
+    body.theme-contrast .player .score{ color:#0f1230; }
+    body.theme-light .pill,
+    body.theme-light-blue .pill,
+    body.theme-light-mint .pill,
+    body.theme-light-rose .pill,
+    body.theme-light-sand .pill,
+    body.theme-contrast .pill{ background:#eef3ff; color:#2b345a; border-color:#cfd6f1; }
   </style>
 </head>
 <body class="theme-dark color-keys sticky-info minimal">
@@ -111,6 +171,7 @@
       <span class="pill" id="activeTopRemain"></span>
       <span class="pill" id="activeTopThrows"></span>
       <span class="pill" id="activeTopTip" style="display:none"></span>
+      <button id="installBtnHeader" class="tab" style="margin-left:8px;display:none">Nainstalovat</button>
     </div>
 
     <div class="tabs hide-when-playing">
@@ -118,6 +179,7 @@
       <button class="tab" data-tab="history">Historie</button>
       <button class="tab" data-tab="leaderboard">Žebříček</button>
       <button class="tab" data-tab="settings">Nastavení</button>
+      <button class="tab" id="installBtn" style="display:none">Nainstalovat</button>
     </div>
   </header>
 
@@ -220,6 +282,12 @@
         <label><input type="checkbox" id="showTips" checked/> Zobrazovat checkout tipy</label>
       </div>
 
+      <h3>Instalace jako aplikace</h3>
+      <div class="chips">
+        <button class="primary" id="installBtnSettings" style="display:none">Nainstalovat</button>
+        <span class="small muted">Tlačítko se zobrazí, jakmile prohlížeč umožní instalaci (PWA).</span>
+      </div>
+
       <h3>TTS (čtení hodnot)</h3>
       <div class="controls" style="grid-template-columns:repeat(2,minmax(0,1fr));max-width:820px">
         <label>Hlas
@@ -241,7 +309,7 @@
 
       <h3>Aktualizace</h3>
       <div class="chips">
-        <button class="primary" id="updateBtn" type="button">Aktualizovat aplikaci</button>
+        <button class="primary" id="updateBtn">Aktualizovat aplikaci</button>
         <span class="small muted">Vyčistí cache i Service Worker a načte poslední verzi z GitHubu.</span>
       </div>
       <h3>Reset</h3>
@@ -250,51 +318,70 @@
         <span class="small muted">Vymaže rozpracovanou hru a obnoví stránku.</span>
       </div>
 
-      <p class="small muted">Čtení hodnot je řešeno <b>TTS</b> (čeština). Soubory MP3 jsou vypnuté.</p>
+      <p class="small muted">Čtení hodnot je řešeno <b>TTS</b> (čeština). Soubory MP3 jsou vypnuté kvůli konfliktům.</p>
     </div>
   </section>
 </div>
 
 <div class="stickybar" id="stickyBar">—</div>
-<div id="errbar"></div>
 
 <script>
-/* ===== Error banner (zobrazí JS chyby přímo na stránce) ===== */
+/* ===== SW AUTOFIX: odregistrovat staré SW a hned registrovat nový ===== */
 (function(){
-  function showErr(msg){
-    var bar = document.getElementById('errbar');
-    if(!bar) return;
-    bar.style.display='block';
-    bar.innerHTML = '<b>Chyba:</b> ' + String(msg);
-  }
-  window.addEventListener('error', function(e){ showErr(e.message || e.error || e); });
-  window.addEventListener('unhandledrejection', function(e){ showErr((e.reason && (e.reason.message||e.reason)) || e); });
-})();
-
-/* ===== PWA registrace – ES5 (bez let/const/async) ===== */
-(function(){
-  if (!('serviceWorker' in navigator)) return;
-  function onLoad(){
+  if(!('serviceWorker' in navigator)) return;
+  window.addEventListener('load', async function(){
     try{
-      var swUrl = (new URL('sw.js', location.href)).pathname;
-      var scope = (new URL('./', location.href)).pathname;
-      navigator.serviceWorker.register(swUrl, { scope: scope })["catch"](function(){});
-    }catch(_){}
-  }
-  if (document.readyState === 'complete') onLoad(); else window.addEventListener('load', onLoad);
+      const regs = await navigator.serviceWorker.getRegistrations();
+      for(const r of regs){ try{ await r.unregister(); }catch(e){} }
+    }catch(e){}
+    try{
+      await navigator.serviceWorker.register('./sw.js', { scope: './' });
+    }catch(e){}
+  });
 })();
 
-/* ===== TTS – pouze syntéza, preferuj češtinu (ES5) ===== */
+/* ===== PWA (install) – tlačítka se zobrazí jen pokud je k dispozici prompt ===== */
+let deferredPrompt = null;
+function showInstallButtons(show){
+  ['installBtn','installBtnHeader','installBtnSettings'].forEach(function(id){
+    const b = document.getElementById(id);
+    if (b) b.style.display = show ? 'inline-block' : 'none';
+  });
+}
+window.addEventListener('beforeinstallprompt', function(e){
+  e.preventDefault();
+  deferredPrompt = e;
+  showInstallButtons(true);
+});
+window.addEventListener('appinstalled', function(){
+  deferredPrompt = null;
+  showInstallButtons(false);
+});
+async function doInstall(){
+  if (!deferredPrompt) { alert('V menu prohlížeče zvol „Přidat na plochu / Nainstalovat“'); return; }
+  deferredPrompt.prompt();
+  try { await deferredPrompt.userChoice; } catch(e){}
+  deferredPrompt = null;
+}
+['installBtn','installBtnHeader','installBtnSettings'].forEach(function(id){
+  const b = document.getElementById(id);
+  if (b) b.addEventListener('click', doInstall);
+});
+
+/* ===== TTS – pouze syntéza (bez MP3), preferuj češtinu ===== */
 var voices = [];
 function populateVoiceSelect(){
   var sel = document.getElementById('ttsVoice'); if(!sel) return;
   var cur = (state.settings && state.settings.ttsVoice) ? state.settings.ttsVoice : 'auto';
   sel.innerHTML = '';
-  var optAuto = document.createElement('option'); optAuto.value='auto'; optAuto.textContent='Automaticky (preferuj češtinu)'; sel.appendChild(optAuto);
-  var i; for(i=0;i<(voices||[]).length;i++){
-    var v = voices[i]; var o=document.createElement('option');
-    o.value=v.name; o.textContent=v.name + (v.lang?' ('+v.lang+')':''); sel.appendChild(o);
-  }
+  var optAuto = document.createElement('option');
+  optAuto.value='auto'; optAuto.textContent='Automaticky (preferuj češtinu)';
+  sel.appendChild(optAuto);
+  (voices||[]).forEach(function(v){
+    var o=document.createElement('option');
+    o.value=v.name; o.textContent=v.name + (v.lang?' ('+v.lang+')':'');
+    sel.appendChild(o);
+  });
   sel.value = cur;
 }
 function refreshVoices(){
@@ -305,12 +392,12 @@ function preferredVoice(){
   var list = voices || [];
   var sel = (state.settings && state.settings.ttsVoice) ? state.settings.ttsVoice : 'auto';
   if(sel && sel !== 'auto'){
-    var k; for(k=0;k<list.length;k++){ var x=list[k]; if(x && (x.name===sel || x.voiceURI===sel)) return x; }
+    var v = list.find(function(x){ return x && (x.name===sel || x.voiceURI===sel); });
+    if(v) return v;
   }
   function by(prefix){
-    var p = String(prefix||'').toLowerCase(); var j; for(j=0;j<list.length;j++){
-      var v=list[j]; if(v && v.lang && String(v.lang).toLowerCase().indexOf(p)===0) return v;
-    } return null;
+    var p = prefix.toLowerCase();
+    return list.find(function(v){ return v && v.lang && v.lang.toLowerCase().indexOf(p)===0; });
   }
   return by('cs') || by('sk') || by('pl') || list[0] || null;
 }
@@ -319,8 +406,9 @@ function speakText(t){
   if(!('speechSynthesis' in window)) return;
   try{
     var u = new SpeechSynthesisUtterance(String(t));
-    var v = preferredVoice(); if(v) u.voice = v;
-    u.lang = 'cs-CZ';
+    var v = preferredVoice();
+    if(v) u.voice = v;
+    u.lang   = 'cs-CZ'; // vynucení češtiny (pomáhá Samsung Internetu)
     u.rate   = (state.settings && state.settings.ttsRate   != null) ? state.settings.ttsRate   : 1;
     u.volume = (state.settings && state.settings.ttsVolume != null) ? state.settings.ttsVolume : 1;
     u.pitch  = (state.settings && state.settings.ttsPitch  != null) ? state.settings.ttsPitch  : 1;
@@ -336,28 +424,15 @@ function playWord(w){
 }
 if('speechSynthesis' in window){
   refreshVoices();
-  if('onvoiceschanged' in window.speechSynthesis){ window.speechSynthesis.onvoiceschanged = refreshVoices; }
-  document.addEventListener('visibilitychange', function(){ if(document.visibilityState==='visible') refreshVoices(); });
+  if('onvoiceschanged' in window.speechSynthesis){
+    window.speechSynthesis.onvoiceschanged = refreshVoices;
+  }
+  document.addEventListener('visibilitychange', function(){
+    if(document.visibilityState==='visible') refreshVoices();
+  });
 }
 
 /* ===== Stav ===== */
-function ts(){return Date.now();}
-function extend(target, src){ for(var k in src){ if(src.hasOwnProperty(k)) target[k]=src[k]; } return target; }
-function loadHistory(){ try{ return JSON.parse(localStorage.getItem('dartsHistoryV1'))||{players:[],legs:[]}; }catch(e){ return {players:[],legs:[]}; } }
-function saveHistory(){ try{ localStorage.setItem('dartsHistoryV1', JSON.stringify(state.history)); }catch(e){} }
-function loadSettings(){
-  try{
-    var s = JSON.parse(localStorage.getItem('dartsSettingsV1')) || {};
-    var def = { theme:'theme-dark', colorizeKeys:true, minimalUi:true, stickyBar:true, showTips:true, ttsRate:1, ttsVolume:1, ttsPitch:1, ttsVoice:'auto', ttsSpeakBust:true, ttsSpeakWin:true };
-    return extend(def, s);
-  }catch(e){
-    return { theme:'theme-dark', colorizeKeys:true, minimalUi:true, stickyBar:true, showTips:true, ttsRate:1, ttsVolume:1, ttsPitch:1, ttsVoice:'auto', ttsSpeakBust:true, ttsSpeakWin:true };
-  }
-}
-function saveSettings(){ try{ localStorage.setItem('dartsSettingsV1', JSON.stringify(state.settings)); }catch(e){} }
-function loadActive(){ try{ return JSON.parse(localStorage.getItem('dartsActiveV1'))||null; }catch(e){ return null; } }
-function saveActive(){ try{ var snapshot={ startingScore:state.startingScore,doubleOut:state.doubleOut,players:state.players,currentIndex:state.currentIndex,leg:state.leg,soundOn:state.soundOn }; localStorage.setItem('dartsActiveV1', JSON.stringify(snapshot)); }catch(e){} }
-
 var state={
   startingScore:301,
   doubleOut:false,
@@ -369,64 +444,82 @@ var state={
   multiplier:1,
   settings: loadSettings()
 };
+function ts(){return Date.now();}
+function loadHistory(){ try{ return JSON.parse(localStorage.getItem('dartsHistoryV1'))||{players:[],legs:[]}; }catch(e){ return {players:[],legs:[]}; } }
+function saveHistory(){ localStorage.setItem('dartsHistoryV1', JSON.stringify(state.history)); }
+function loadSettings(){
+  try{
+    return JSON.parse(localStorage.getItem('dartsSettingsV1')) || {
+      theme:'theme-dark',
+      colorizeKeys:true,
+      minimalUi:true,
+      stickyBar:true,
+      showTips:true,
+      ttsRate:1, ttsVolume:1, ttsPitch:1, ttsVoice:'auto',
+      ttsSpeakBust:true, ttsSpeakWin:true
+    };
+  }catch(e){
+    return { theme:'theme-dark', colorizeKeys:true, minimalUi:true, stickyBar:true, showTips:true,
+      ttsRate:1, ttsVolume:1, ttsPitch:1, ttsVoice:'auto', ttsSpeakBust:true, ttsSpeakWin:true };
+  }
+}
+function saveSettings(){ localStorage.setItem('dartsSettingsV1', JSON.stringify(state.settings)); }
+function loadActive(){ try{ return JSON.parse(localStorage.getItem('dartsActiveV1'))||null; }catch(e){ return null; } }
+function saveActive(){ var snapshot={ startingScore:state.startingScore,doubleOut:state.doubleOut,players:state.players,currentIndex:state.currentIndex,leg:state.leg,soundOn:state.soundOn }; localStorage.setItem('dartsActiveV1', JSON.stringify(snapshot)); }
 
 /* ===== Panely ===== */
 var panels=document.querySelectorAll('[data-panel]');
 var tabs=document.querySelectorAll('.tab[data-tab]');
-(function(){
-  var i; for(i=0;i<tabs.length;i++){
-    (function(tab){
-      tab.addEventListener('click',function(){
-        var all=document.querySelectorAll('.tab'); var j; for(j=0;j<all.length;j++) all[j].classList.remove('active');
-        tab.classList.add('active');
-        var target=tab.getAttribute('data-tab');
-        var k; for(k=0;k<panels.length;k++) panels[k].hidden = panels[k].getAttribute('data-panel')!==target;
-        if(target==='history') renderFullHistory();
-        if(target==='leaderboard') renderLeaderboard();
-      });
-    })(tabs[i]);
-  }
-})();
+for(var i=0;i<tabs.length;i++){
+  (function(tab){
+    tab.addEventListener('click',function(){
+      var all=document.querySelectorAll('.tab'); for(var j=0;j<all.length;j++) all[j].classList.remove('active');
+      tab.classList.add('active');
+      var target=tab.getAttribute('data-tab');
+      for(var k=0;k<panels.length;k++) panels[k].hidden = panels[k].getAttribute('data-panel')!==target;
+      if(target==='history') renderFullHistory();
+      if(target==='leaderboard') renderLeaderboard();
+    });
+  })(tabs[i]);
+}
 function setStatus(msg){ var el=document.getElementById('statusPill'); if(el) el.textContent=msg; }
 
 /* ===== Logika hry ===== */
 function isInProgress(){
-  var prog = (state.leg && state.leg.turns && state.leg.turns.length>0);
-  if(prog) return true;
-  var i; for(i=0;i<state.players.length;i++){ var p=state.players[i]; if(p.turnThrows && p.turnThrows.length>0) return true; }
-  return false;
+  return (state.leg && state.leg.turns && state.leg.turns.length>0)
+      || state.players.some(function(p){ return p.turnThrows && p.turnThrows.length>0; });
 }
 function addPlayer(){
   if(isInProgress()){ alert('Během hry nelze přidávat hráče.'); return; }
   var inp=document.getElementById('newPlayerName'); var name=(inp.value||'').trim(); if(!name) return;
   var id='p'+ts();
-  var existing=null, i; for(i=0;i<(state.history.players||[]).length;i++){ var pp=state.history.players[i]; if((pp.name||'').toLowerCase()===name.toLowerCase()){ existing=pp; break; } }
+  var existing=(state.history.players||[]).find(function(p){ return (p.name||'').toLowerCase()===name.toLowerCase(); });
   var wins=existing? (existing.wins||0) : 0;
   var player={id:id,name:name,wins:wins,remaining:state.startingScore,turnThrows:[]};
   state.players.push(player);
-  if(!existing){ if(!state.history.players) state.history.players=[]; state.history.players.push({id:id,name:name,wins:wins}); }
+  if(!existing){ (state.history.players=state.history.players||[]).push({id:id,name:name,wins:wins}); }
   inp.value='';
   renderPlayers(); saveHistory(); saveActive();
   if(state.players.length===1) setStatus('Přidejte další hráče nebo začněte hru.');
 }
 function removePlayer(id){
   if(isInProgress()){ alert('Během hry nelze upravovat soupisku.'); return; }
-  var idx=-1, i; for(i=0;i<state.players.length;i++){ if(state.players[i].id===id){ idx=i; break; } }
+  var idx=state.players.findIndex(function(p){ return p.id===id; });
   if(idx>-1){ state.players.splice(idx,1); if(state.currentIndex>=state.players.length) state.currentIndex=0; renderPlayers(); saveActive(); }
 }
 function setGame(val){
   if(isInProgress()){ alert('Nelze měnit typ hry v průběhu legu.'); return; }
   state.startingScore=Number(val);
-  var i; for(i=0;i<state.players.length;i++){ state.players[i].remaining=state.startingScore; state.players[i].turnThrows=[]; }
+  state.players.forEach(function(p){ p.remaining=state.startingScore; p.turnThrows=[]; });
   state.leg={ id:ts(), turns:[], startingScore:state.startingScore, doubleOut:state.doubleOut, createdAt:new Date().toISOString() };
   renderPlayers(); renderLiveHistory(); setStatus('Nastaveno '+state.startingScore+'.'); saveActive();
 }
-function toggleDoubleOut(on){ if(isInProgress()){ alert('Double-out lze měnit jen před legem.'); var d=document.getElementById('doubleOut'); if(d) d.checked=state.doubleOut; return;} state.doubleOut=!!on; saveActive(); }
-function toggleSound(on){ state.soundOn=!!on; saveActive(); }
+function toggleDoubleOut(on){ if(isInProgress()){ alert('Double-out lze měnit jen před legem.'); var d=document.getElementById('doubleOut'); if(d) d.checked=state.doubleOut; return;} state.doubleOut=on; saveActive(); }
+function toggleSound(on){ state.soundOn=on; saveActive(); }
 
 function startNewLeg(){
   if(state.players.length===0){ alert('Přidejte alespoň jednoho hráče.'); return; }
-  var i; for(i=0;i<state.players.length;i++){ state.players[i].remaining=state.startingScore; state.players[i].turnThrows=[]; }
+  state.players.forEach(function(p){ p.remaining=state.startingScore; p.turnThrows=[]; });
   state.currentIndex=0;
   state.leg={ id:ts(), turns:[], startingScore:state.startingScore, doubleOut:state.doubleOut, createdAt:new Date().toISOString() };
   renderPlayers(); renderLiveHistory(); setStatus('Začíná nové kolo.'); updateUI(); saveActive();
@@ -435,32 +528,27 @@ function startGameRandom(){
   if(state.players.length===0){ alert('Přidejte alespoň jednoho hráče.'); return; }
   if(isInProgress()){
     if(!confirm('Hra je rozjetá. Ukončit a začít novou s náhodným pořadím?')) return;
-    if(!state.history.legs) state.history.legs=[];
-    var legCopy={ id: state.leg.id, turns: state.leg.turns, startingScore: state.leg.startingScore, doubleOut: state.leg.doubleOut, createdAt: state.leg.createdAt, aborted: true };
-    state.history.legs.push(legCopy); saveHistory();
+    state.history.legs.push(Object.assign({}, state.leg, {aborted:true})); saveHistory();
   }
-  // Fisher–Yates shuffle
-  var i; for(i=state.players.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var tmp=state.players[i]; state.players[i]=state.players[j]; state.players[j]=tmp; }
-  for(i=0;i<state.players.length;i++){ state.players[i].remaining=state.startingScore; state.players[i].turnThrows=[]; }
+  for(var i=state.players.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var tmp=state.players[i]; state.players[i]=state.players[j]; state.players[j]=tmp; }
+  state.players.forEach(function(p){ p.remaining=state.startingScore; p.turnThrows=[]; });
   state.currentIndex=0;
   state.leg={ id:ts(), turns:[], startingScore:state.startingScore, doubleOut:state.doubleOut, createdAt:new Date().toISOString() };
   renderPlayers(); renderLiveHistory(); updateUI(); saveActive();
-  var names=[]; for(i=0;i<state.players.length;i++) names.push(state.players[i].name);
-  setStatus('Začínáme – pořadí: '+ names.join(', '));
+  setStatus('Začínáme – pořadí: '+ state.players.map(function(p){return p.name;}).join(', '));
 }
 function abortLeg(){
   if(!isInProgress()){ alert('Není co ukončit.'); return; }
   if(!confirm('Ukončit rozehranou hru? Rozpracovaný leg bude uložen jako nedokončený.')) return;
-  if(!state.history.legs) state.history.legs=[];
-  var legCopy={ id: state.leg.id, turns: state.leg.turns, startingScore: state.leg.startingScore, doubleOut: state.leg.doubleOut, createdAt: state.leg.createdAt, aborted: true };
-  state.history.legs.push(legCopy); saveHistory();
-  var i; for(i=0;i<state.players.length;i++){ state.players[i].remaining=state.startingScore; state.players[i].turnThrows=[]; }
+  state.history.legs.push(Object.assign({}, state.leg, {aborted:true}));
+  saveHistory();
+  state.players.forEach(function(p){ p.remaining=state.startingScore; p.turnThrows=[]; });
   state.currentIndex=0;
   state.leg={ id:ts(), turns:[], startingScore:state.startingScore, doubleOut:state.doubleOut, createdAt:new Date().toISOString() };
   renderPlayers(); renderLiveHistory(); updateUI(); saveActive(); setStatus('Hra ukončena.');
 }
 function currentPlayer(){ return state.players[state.currentIndex]; }
-function nextPlayer(){ if(state.players.length){ state.currentIndex=(state.currentIndex+1)%state.players.length; } }
+function nextPlayer(){ state.currentIndex=(state.currentIndex+1)%state.players.length; }
 
 /* ===== Zadávání hodů ===== */
 function enterScore(base,mul){
@@ -472,16 +560,14 @@ function enterScore(base,mul){
   p.turnThrows.push({base:base,mul:mul,score:score});
   renderPlayers(); renderLiveHistory(); renderTips();
   if(p.turnThrows.length===3){ finishTurn(); }
-  state.multiplier=1;
-  var chips=document.querySelectorAll('#multiplier .chip'); var i; for(i=0;i<chips.length;i++) chips[i].classList.remove('active');
-  var sbtn=document.querySelector('#multiplier .chip[data-mul="1"]'); if(sbtn) sbtn.classList.add('active');
+  state.multiplier=1; var chips=document.querySelectorAll('#multiplier .chip'); for(var i=0;i<chips.length;i++) chips[i].classList.remove('active'); var sbtn=document.querySelector('#multiplier .chip[data-mul="1"]'); if(sbtn) sbtn.classList.add('active');
   updateUI(); saveActive();
 }
 function deepClone(o){ try{return JSON.parse(JSON.stringify(o));}catch(e){return o;} }
 function finishTurn(){
   var p=currentPlayer(); if(!p) return;
   var darts=p.turnThrows||[]; if(darts.length===0){ nextPlayer(); renderPlayers(); saveActive(); return; }
-  var i, turnTotal=0; for(i=0;i<darts.length;i++) turnTotal+=darts[i].score;
+  var turnTotal=darts.reduce(function(a,d){return a+d.score;},0);
   var remaining=p.remaining - turnTotal;
   var bust=false;
 
@@ -491,7 +577,6 @@ function finishTurn(){
 
   if(!bust){ p.remaining=remaining; }
 
-  if(!state.leg.turns) state.leg.turns=[];
   var record={ playerId:p.id, playerName:p.name, darts:deepClone(darts), turnTotal:turnTotal, bust:bust, remainingAfter:p.remaining, when:new Date().toISOString() };
   state.leg.turns.push(record);
 
@@ -499,11 +584,8 @@ function finishTurn(){
 
   if(p.remaining===0){
     playWord('vyhra');
-    if(!state.history.legs) state.history.legs=[];
-    var legWin={ id: state.leg.id, turns: state.leg.turns, startingScore: state.leg.startingScore, doubleOut: state.leg.doubleOut, createdAt: state.leg.createdAt, winnerId: p.id };
-    state.history.legs.push(legWin);
-    var hp=null; for(i=0;i<(state.history.players||[]).length;i++){ if(state.history.players[i].id===p.id){ hp=state.history.players[i]; break; } }
-    if(hp){ hp.wins=(hp.wins||0)+1; }
+    state.history.legs.push(Object.assign({}, state.leg, {winnerId:p.id}));
+    var hp=(state.history.players||[]).find(function(x){return x.id===p.id;}); if(hp){ hp.wins=(hp.wins||0)+1; }
     saveHistory();
     alert('Vítěz: '+p.name+'!');
     setStatus('Vítěz: '+p.name);
@@ -518,80 +600,66 @@ function undoLastDart(){
   if(p && p.turnThrows && p.turnThrows.length>0){
     p.turnThrows.pop(); renderPlayers(); renderLiveHistory(); updateUI(); renderTips(); saveActive(); return;
   }
-  var turns=state.leg.turns||[]; var last=turns[turns.length-1]; if(!last){ setStatus('Nic k vrácení.'); return; }
-  var idx=-1, i; for(i=0;i<state.players.length;i++){ if(state.players[i].id===last.playerId){ idx=i; break; } }
+  var last=state.leg.turns[state.leg.turns.length-1]; if(!last){ setStatus('Nic k vrácení.'); return; }
+  var idx=state.players.findIndex(function(pl){ return pl.id===last.playerId; });
   if(idx!==-1) state.currentIndex=idx;
   var pl=currentPlayer();
   pl.remaining= last.bust? pl.remaining : last.remainingAfter + last.turnTotal;
   pl.turnThrows=last.darts;
-  turns.pop();
+  state.leg.turns.pop();
   renderPlayers(); renderLiveHistory(); updateUI(); renderTips(); saveActive();
 }
 
-/* ===== Tipy (zkrácené) – bez Set ===== */
-var UNFINISHABLE = {'169':true,'168':true,'166':true,'165':true,'163':true,'162':true,'159':true};
+/* ===== Tipy (zkrácené) ===== */
+var UNFINISHABLE=new Set([169,168,166,165,163,162,159]);
 var TPR=[20,19,18,17,16,15];
-function suggestDoubleOut(rem){
-  var res=[]; if(rem>170||rem<=1||UNFINISHABLE[String(rem)]) return res;
-  if(rem===50){ res.push(['D25']); return res; }
-  if(rem%2===0 && rem<=40){ res.push(['D'+(rem/2)]); return res; }
-  var i; for(i=0;i<TPR.length;i++){
-    var t=TPR[i]; var r=rem-3*t;
-    if(r===50){ res.push(['T'+t,'D25']); break; }
-    if(r>0 && r%2===0 && r<=40){ res.push(['T'+t,'D'+(r/2)]); if(res.length>=3) break; }
-  }
-  return res;
-}
-function suggestSingleOut(rem){
-  var res=[]; if(rem<=0) return res;
-  if(rem<=50){ if(rem===50) res.push(['Bull']); else res.push(['S'+rem]); return res; }
-  var i; for(i=0;i<TPR.length;i++){
-    var t=TPR[i]; var r=rem-3*t;
-    if(r>=0 && r<=50){ if(r===50) res.push(['T'+t,'Bull']); else res.push(['T'+t,'S'+r]); if(res.length>=3) break; }
-  }
-  return res;
-}
-function getProjectedRemaining(p){
-  var used=0, i; for(i=0;i<(p.turnThrows||[]).length;i++){ used += p.turnThrows[i].score; }
-  return p.remaining - used;
-}
+function suggestDoubleOut(rem){ var res=[]; if(rem>170||rem<=1||UNFINISHABLE.has(rem)) return res; if(rem===50) return [['D25']]; if(rem%2===0 && rem<=40) return [['D'+(rem/2)]]; for(var i=0;i<TPR.length;i++){ var t=TPR[i]; var r=rem-3*t; if(r===50){ res.push(['T'+t,'D25']); break; } if(r>0 && r%2===0 && r<=40){ res.push(['T'+t,'D'+(r/2)]); if(res.length>=3) break; } } return res; }
+function suggestSingleOut(rem){ var res=[]; if(rem<=0) return res; if(rem<=50){ if(rem===50) return [['Bull']]; return [['S'+rem]]; } for(var i=0;i<TPR.length;i++){ var t=TPR[i]; var r=rem-3*t; if(r>=0 && r<=50){ if(r===50) res.push(['T'+t,'Bull']); else res.push(['T'+t,'S'+r]); if(res.length>=3) break; } } return res; }
+function getProjectedRemaining(p){ var used=(p.turnThrows||[]).reduce(function(a,d){return a+d.score;},0); return p.remaining - used; }
 function renderTips(){
   var box=document.getElementById('checkoutTips'); var tipPill=document.getElementById('activeTopTip'); var showOpt=document.getElementById('showTips'); if(!box) return;
-  var showTips = showOpt ? !!showOpt.checked : true; if(!showTips){ box.textContent=''; if(tipPill) tipPill.style.display='none'; return; }
+  var showTips = showOpt ? showOpt.checked : true; if(!showTips){ box.textContent=''; if(tipPill) tipPill.style.display='none'; return; }
   var p=currentPlayer(); if(!p){ box.textContent=''; if(tipPill) tipPill.style.display='none'; return; }
   var proj=getProjectedRemaining(p); var limit = state.doubleOut ? 170 : 120;
-  if(proj<=0 || proj>limit || UNFINISHABLE[String(proj)]){ box.textContent=''; if(tipPill) tipPill.style.display='none'; return; }
+  if(proj<=0 || proj>limit || UNFINISHABLE.has(proj)){ box.textContent=''; if(tipPill) tipPill.style.display='none'; return; }
   var tips = state.doubleOut? suggestDoubleOut(proj): suggestSingleOut(proj);
   if(!tips.length){ box.textContent=''; if(tipPill) tipPill.style.display='none'; return; }
-  var i, strings=[]; for(i=0;i<tips.length;i++){ strings.push(tips[i].join(' → ')); }
+  var strings=tips.map(function(arr){return arr.join(' → ');});
   box.textContent = 'Tipy: '+strings.join(' | ');
   if(tipPill){ tipPill.textContent = strings[0]; tipPill.style.display='inline-block'; }
 }
 
 /* ====== Game options (x01, double-out, čtení) ====== */
 function bindGameOptions(){
-  var box = document.getElementById('gameOptions'); if(!box) return;
+  var box = document.getElementById('gameOptions');
+  if(!box) return;
   box.addEventListener('change', function(e){
-    var t = e.target; if(!t) return;
-    if(t.name === 'x01'){ setGame(Number(t.value)); syncGameOptionsUI(); }
-    else if (t.id === 'doubleOut'){ toggleDoubleOut(t.checked); }
-    else if (t.id === 'soundToggle'){ toggleSound(t.checked); }
+    var t = e.target;
+    if(!t) return;
+    if(t.name === 'x01'){
+      setGame(Number(t.value));
+      syncGameOptionsUI();
+    } else if (t.id === 'doubleOut'){
+      toggleDoubleOut(t.checked);
+    } else if (t.id === 'soundToggle'){
+      toggleSound(t.checked);
+    }
   });
   syncGameOptionsUI();
 }
 function syncGameOptionsUI(){
   var cur = String(state.startingScore);
-  var radios = document.querySelectorAll('input[name="x01"]'); var i;
-  for (i=0;i<radios.length;i++){ radios[i].checked = (radios[i].value===cur); }
+  var radios = document.querySelectorAll('input[name="x01"]');
+  for (var i=0;i<radios.length;i++){ radios[i].checked = (radios[i].value===cur); }
   var d = document.getElementById('doubleOut'); if(d) d.checked = !!state.doubleOut;
   var s = document.getElementById('soundToggle'); if(s) s.checked = !!state.soundOn;
 }
 
-/* ====== Nastavení + TTS ovladače ====== */
+/* ====== Nastavení (téma, barvy, minimal UI, sticky panel, tipy + TTS) ====== */
 var THEME_CLASSES=['theme-dark','theme-light','theme-contrast','theme-light-blue','theme-light-mint','theme-light-rose','theme-light-sand'];
 function applySettings(){
-  var b=document.body, theme = (state.settings && state.settings.theme) ? state.settings.theme : 'theme-dark';
-  var i; for(i=0;i<THEME_CLASSES.length;i++) b.classList.remove(THEME_CLASSES[i]);
+  var b=document.body, theme = state.settings && state.settings.theme ? state.settings.theme : 'theme-dark';
+  for(var i=0;i<THEME_CLASSES.length;i++) b.classList.remove(THEME_CLASSES[i]);
   b.classList.add(theme);
   b.classList.toggle('color-keys', !!(state.settings && state.settings.colorizeKeys));
   b.classList.toggle('minimal',   !!(state.settings && state.settings.minimalUi));
@@ -599,51 +667,58 @@ function applySettings(){
 }
 function bindSettingsUI(){
   var themeSel = document.getElementById('themeSelect');
-  if(themeSel){ themeSel.value = (state.settings && state.settings.theme) || 'theme-dark';
-    themeSel.onchange = function(){ state.settings.theme = themeSel.value; saveSettings(); applySettings(); }; }
+  if(themeSel){
+    themeSel.value = (state.settings && state.settings.theme) || 'theme-dark';
+    themeSel.onchange = function(){ state.settings.theme = themeSel.value; saveSettings(); applySettings(); };
+  }
   var ck = document.getElementById('colorizeKeys');
-  if(ck){ ck.checked = !!(state.settings && state.settings.colorizeKeys);
-    ck.onchange=function(){ state.settings.colorizeKeys=ck.checked; saveSettings(); applySettings(); }; }
+  if(ck){ ck.checked = !!(state.settings && state.settings.colorizeKeys); ck.onchange=function(){ state.settings.colorizeKeys=ck.checked; saveSettings(); applySettings(); }; }
   var mu = document.getElementById('minimalUi');
-  if(mu){ mu.checked = !!(state.settings && state.settings.minimalUi);
-    mu.onchange=function(){ state.settings.minimalUi=mu.checked; saveSettings(); applySettings(); }; }
+  if(mu){ mu.checked = !!(state.settings && state.settings.minimalUi); mu.onchange=function(){ state.settings.minimalUi=mu.checked; saveSettings(); applySettings(); }; }
   var sb = document.getElementById('stickyBarToggle');
-  if(sb){ sb.checked = !!(state.settings && state.settings.stickyBar);
-    sb.onchange=function(){ state.settings.stickyBar=sb.checked; saveSettings(); applySettings(); }; }
+  if(sb){ sb.checked = !!(state.settings && state.settings.stickyBar); sb.onchange=function(){ state.settings.stickyBar=sb.checked; saveSettings(); applySettings(); }; }
   var st = document.getElementById('showTips');
-  if(st){ st.checked = (state.settings && (typeof state.settings.showTips!=='undefined')) ? !!state.settings.showTips : true;
-    st.onchange = function(){ state.settings.showTips = st.checked; saveSettings(); if(typeof renderTips==='function') renderTips(); }; }
+  if(st){
+    st.checked = (state.settings && (typeof state.settings.showTips!=='undefined')) ? !!state.settings.showTips : true;
+    st.onchange = function(){ state.settings.showTips = st.checked; saveSettings(); if(typeof renderTips==='function') renderTips(); };
+  }
 
+  /* === TTS ovládání === */
   populateVoiceSelect();
   var vsel = document.getElementById('ttsVoice');
-  if(vsel){ vsel.value = (state.settings && state.settings.ttsVoice) || 'auto';
-    vsel.onchange = function(){ state.settings.ttsVoice = vsel.value; saveSettings(); }; }
+  if(vsel){
+    vsel.value = (state.settings && state.settings.ttsVoice) || 'auto';
+    vsel.onchange = function(){ state.settings.ttsVoice = vsel.value; saveSettings(); };
+  }
   function bindRange(id, key, def){
-    var el=document.getElementById(id); if(!el) return;
+    var el=document.getElementById(id);
+    if(!el) return;
     el.value = (state.settings && state.settings[key]!=null) ? state.settings[key] : def;
     el.oninput = function(){ state.settings[key] = parseFloat(el.value); saveSettings(); };
   }
   bindRange('ttsRate','ttsRate',1);
   bindRange('ttsVolume','ttsVolume',1);
   bindRange('ttsPitch','ttsPitch',1);
-  var sb2=document.getElementById('ttsSpeakBust');
-  if(sb2){ sb2.checked = state.settings.ttsSpeakBust!==false;
-    sb2.onchange=function(){ state.settings.ttsSpeakBust=sb2.checked; saveSettings(); }; }
-  var sw2=document.getElementById('ttsSpeakWin');
-  if(sw2){ sw2.checked = state.settings.ttsSpeakWin!==false;
-    sw2.onchange=function(){ state.settings.ttsSpeakWin=sw2.checked; saveSettings(); }; }
 
-  var test=document.getElementById('ttsTestBtn'); if(test){ test.addEventListener('click', function(){ speakText(60); }); }
+  var sb2=document.getElementById('ttsSpeakBust');
+  if(sb2){ sb2.checked = state.settings.ttsSpeakBust!==false; sb2.onchange=function(){ state.settings.ttsSpeakBust=sb2.checked; saveSettings(); }; }
+
+  var sw2=document.getElementById('ttsSpeakWin');
+  if(sw2){ sw2.checked = state.settings.ttsSpeakWin!==false; sw2.onchange=function(){ state.settings.ttsSpeakWin=sw2.checked; saveSettings(); }; }
+
+  var test=document.getElementById('ttsTestBtn');
+  if(test){ test.addEventListener('click', function(){ speakText(60); }); }
 }
 
 /* ===== Renderování ===== */
 function formatDart(d){ var m=d.mul===1?'S':(d.mul===2?'D':'T'); return m+''+d.base+'='+d.score; }
 function formatDartShort(d){ var m=d.mul===1?'S':(d.mul===2?'D':'T'); return m+''+d.base; }
 function escapeHtml(s){ s=(s+""); return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
 function renderPlayers(){
   var box=document.getElementById('players'); if(!box) return;
   box.innerHTML='';
-  var i; for(i=0;i<state.players.length;i++){
+  for(var i=0;i<state.players.length;i++){
     (function(i){
       var p=state.players[i];
       var throwsTxt=(p.turnThrows&&p.turnThrows.length)?' ['+p.turnThrows.map(formatDartShort).join(', ')+']':'';
@@ -671,14 +746,14 @@ function renderLiveHistory(){
   box.innerHTML='';
   var p=currentPlayer();
   if(p && p.turnThrows && p.turnThrows.length){
-    var sum=0, i; for(i=0;i<p.turnThrows.length;i++) sum+=p.turnThrows[i].score;
+    var sum=p.turnThrows.reduce(function(a,d){return a+d.score;},0);
     var row=document.createElement('div'); row.className='hist-row';
     row.innerHTML='<div><b>'+escapeHtml(p.name)+'</b> – rozpracovaný tah: '+p.turnThrows.map(formatDart).join(', ')+' (='+sum+')</div>';
     box.appendChild(row);
   }
-  var turns=state.leg.turns||[]; var j;
-  for(j=turns.length-1;j>=0;j--){
-    var t=turns[j]; var r=document.createElement('div'); r.className='hist-row';
+  var turns=state.leg.turns||[];
+  for(var i=turns.length-1;i>=0;i--){
+    var t=turns[i]; var r=document.createElement('div'); r.className='hist-row';
     r.innerHTML='<div><b>'+escapeHtml(t.playerName)+'</b> → '+t.darts.map(formatDart).join(', ')
       +' <span class="muted">(='+t.turnTotal+')</span> '+(t.bust?'<span style="color:var(--warn)">BUST</span>':'')
       +' <span class="muted small">zůstatek: '+t.remainingAfter+'</span></div>';
@@ -688,25 +763,22 @@ function renderLiveHistory(){
 function renderFullHistory(){
   var box=document.getElementById('fullHistory'); if(!box) return; box.innerHTML='';
   var legs=(state.history.legs||[]); if(!legs.length){ box.innerHTML='<div class="hist-row muted">Zatím žádná odehraná kola.</div>'; return; }
-  var i; for(i=legs.length-1;i>=0;i--){
-    var leg=legs[i]; var wrap=document.createElement('div'); wrap.className='hist-row';
-    var winner=null, j; for(j=0;j<(state.history.players||[]).length;j++){ if(state.history.players[j].id===leg.winnerId){ winner=state.history.players[j]; break; } }
-    var dt=new Date(leg.createdAt||Date.now()).toLocaleString();
-    wrap.innerHTML='<div><b>Leg #'+(i+1)+'</b> • start: '+(leg.startingScore||'-')+' • '+(leg.doubleOut?'double-out':'standard')+(leg.aborted?' • <span style="color:var(--warn)">ukončeno</span>':'')+' • vítěz: <b>'+(winner?escapeHtml(winner.name):'—')+'</b> <span class="small muted">'+dt+'</span></div>';
-    for(j=0;j<(leg.turns||[]).length;j++){
-      var t=leg.turns[j];
+  legs.slice().reverse().forEach(function(leg,idx){
+    var wrap=document.createElement('div'); wrap.className='hist-row';
+    var winner=(state.history.players||[]).find(function(p){return p.id===leg.winnerId;});
+    wrap.innerHTML='<div><b>Leg #'+(legs.length-idx)+'</b> • start: '+(leg.startingScore||'-')+' • '+(leg.doubleOut?'double-out':'standard')+(leg.aborted?' • <span style="color:var(--warn)">ukončeno</span>':'')+' • vítěz: <b>'+(winner?escapeHtml(winner.name):'—')+'</b> <span class="small muted">'+new Date(leg.createdAt||Date.now()).toLocaleString()+'</span></div>';
+    (leg.turns||[]).forEach(function(t){
       var line=document.createElement('div'); line.className='small muted'; line.style.marginLeft='8px';
       line.textContent=t.playerName+': '+t.darts.map(function(d){return d.mul+'×'+d.base+'='+d.score;}).join(', ')+' = '+t.turnTotal+(t.bust?' (BUST)':'')+' → '+t.remainingAfter;
       wrap.appendChild(line);
-    }
+    });
     box.appendChild(wrap);
-  }
+  });
 }
 function renderLeaderboard(){
   var tbody=document.querySelector('#leaderTable tbody'); if(!tbody) return;
   var arr=(state.history.players||[]).slice().sort(function(a,b){return (b.wins||0)-(a.wins||0);});
-  var i, html=''; for(i=0;i<arr.length;i++){ var p=arr[i]; html+='<tr><td>'+(i+1)+'.</td><td>'+escapeHtml(p.name)+'</td><td>'+(p.wins||0)+'</td></tr>'; }
-  tbody.innerHTML=html;
+  tbody.innerHTML=arr.map(function(p,i){return '<tr><td>'+(i+1)+'.</td><td>'+escapeHtml(p.name)+'</td><td>'+(p.wins||0)+'</td></tr>';}).join('');
 }
 
 /* ===== Export / import ===== */
@@ -760,69 +832,58 @@ function updateUI(){
 function buildKeypad(){
   var pad=document.getElementById('keypad'); pad.innerHTML='';
   var nums=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,25,50];
-  var i; for(i=0;i<nums.length;i++){
-    (function(n){
-      var b=document.createElement('button'); b.className='key'; b.textContent=n;
-      b.addEventListener('click',function(){ enterScore(n); });
-      pad.appendChild(b);
-    })(nums[i]);
-  }
+  nums.forEach(function(n){ var b=document.createElement('button'); b.className='key'; b.textContent=n; b.addEventListener('click',function(){ enterScore(n); }); pad.appendChild(b); });
   var miss=document.createElement('button'); miss.className='key miss'; miss.textContent='Miss'; miss.addEventListener('click',function(){ enterScore(0,1); }); pad.appendChild(miss);
 }
-// Přidání hráče + Enter
-(function(){
+(function bindAddPlayer(){
   var btn=document.getElementById('addPlayerBtn');
   var inp=document.getElementById('newPlayerName');
-  if(btn) btn.addEventListener('click', function(e){ if(e && e.preventDefault) e.preventDefault(); addPlayer(); });
-  if(inp) inp.addEventListener('keydown', function(e){ if(e && e.key==='Enter') addPlayer(); });
+  if(btn) btn.addEventListener('click', function(e){ e.preventDefault(); addPlayer(); });
+  if(inp) inp.addEventListener('keydown', function(e){ if(e.key==='Enter') addPlayer(); });
 })();
 function setupMultiplierChips(){
-  var box=document.getElementById('multiplier'); var chips=box.querySelectorAll('.chip'); var i;
-  for(i=0;i<chips.length;i++){
+  var box=document.getElementById('multiplier');
+  var chips=box.querySelectorAll('.chip');
+  for(var i=0;i<chips.length;i++){
     (function(ch){
       ch.addEventListener('click',function(){
-        var j; for(j=0;j<chips.length;j++) chips[j].classList.remove('active');
+        for(var j=0;j<chips.length;j++) chips[j].classList.remove('active');
         ch.classList.add('active'); state.multiplier=Number(ch.getAttribute('data-mul')); saveActive();
       });
     })(chips[i]);
   }
 }
 
-/* === Aktualizace/Reset – bez async/await === */
-function updateApp(){
+/* === Aktualizační a reset tlačítka === */
+async function updateApp(){
   try{
     if('serviceWorker' in navigator){
-      navigator.serviceWorker.getRegistrations().then(function(regs){
-        var i, p=[];
-        for(i=0;i<regs.length;i++){
-          (function(reg){
-            try{ p.push(reg.update()); }catch(_){}
-            if(reg.waiting) try{ reg.waiting.postMessage({type:'SKIP_WAITING'}); }catch(_){}
-            try{ p.push(reg.unregister()); }catch(_){}
-          })(regs[i]);
-        }
-        Promise.all(p)["finally"](function(){
-          if('caches' in window){
-            caches.keys().then(function(keys){
-              Promise.all(keys.map(function(k){ return caches.delete(k); }))["finally"](function(){
-                location.replace(location.pathname + '?v=' + Date.now());
-              });
-            }, function(){ location.replace(location.pathname + '?v=' + Date.now()); });
-          } else {
-            location.replace(location.pathname + '?v=' + Date.now());
-          }
-        });
-      }, function(){ location.replace(location.pathname + '?v=' + Date.now()); });
-    } else {
-      location.replace(location.pathname + '?v=' + Date.now());
+      const regs = await navigator.serviceWorker.getRegistrations();
+      for(const reg of regs){
+        try{ await reg.update(); }catch(e){}
+        if(reg.waiting) reg.waiting.postMessage({type:'SKIP_WAITING'});
+        try{ await reg.unregister(); }catch(e){}
+      }
     }
-  }catch(e){ location.replace(location.pathname + '?v=' + Date.now()); }
+    if('caches' in window){
+      const keys = await caches.keys();
+      await Promise.all(keys.map(k => caches.delete(k)));
+    }
+  } finally {
+    location.replace(location.pathname + '?v=' + Date.now());
+  }
 }
-var _ub = document.getElementById('updateBtn'); if (_ub) _ub.addEventListener('click', updateApp);
-var _rb = document.getElementById('resetAppBtn'); if (_rb) _rb.addEventListener('click', function(){ try { localStorage.removeItem('dartsActiveV1'); }catch(e){} location.reload(); });
+var _ub = document.getElementById('updateBtn');
+if (_ub) _ub.addEventListener('click', updateApp);
+var _rb = document.getElementById('resetAppBtn');
+if (_rb) _rb.addEventListener('click', function(){
+  try { localStorage.removeItem('dartsActiveV1'); } catch(e){}
+  location.reload();
+});
 
 buildKeypad(); setupMultiplierChips(); bindGameOptions(); renderPlayers(); renderLiveHistory(); updateTurnInfo(); renderTips();
 applySettings(); bindSettingsUI(); syncGameOptionsUI();
+
 var saved=loadActive();
 if(saved && saved.players && saved.players.length){
   state.startingScore = (saved.startingScore!=null ? saved.startingScore : state.startingScore);

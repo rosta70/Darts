@@ -411,14 +411,77 @@ function getProjectedRemaining(p){ const used=(p.turnThrows||[]).reduce((a,d)=>a
 function renderTips(){ const box=document.getElementById('checkoutTips'); const tipPill=document.getElementById('activeTopTip'); const showOpt=document.getElementById('showTips'); if(!box) return; const showTips = showOpt ? showOpt.checked : true; if(!showTips){ box.textContent=''; if(tipPill) tipPill.style.display='none'; return; } const p=currentPlayer(); if(!p){ box.textContent=''; if(tipPill) tipPill.style.display='none'; return; } const proj=getProjectedRemaining(p); const limit = state.doubleOut ? 170 : 120; if(proj<=0 || proj>limit || UNFINISHABLE.has(proj)){ box.textContent=''; if(tipPill) tipPill.style.display='none'; return; } const tips = state.doubleOut? suggestDoubleOut(proj): suggestSingleOut(proj); if(!tips.length){ box.textContent=''; if(tipPill) tipPill.style.display='none'; return; } const strings=tips.map(arr=>arr.join(' → ')); const text='Tipy: '+strings.join(' | '); box.textContent = text; if(tipPill){ tipPill.textContent = strings[0]; tipPill.style.display='inline-block'; } }
 
 // Renderování
-function renderPlayers(){ const box=document.getElementById('players'); box.innerHTML=''; state.players.forEach((p,i)=>{ const throwsText=p.turnThrows && p.turnThrows.length? ' ['+p.turnThrows.map(formatDartShort).join(', ')+']':''; const proj=(i===state.currentIndex)? getProjectedRemaining(p): null; const projTxt=''; el.className='player'; el.innerHTML=`<div style=\"display:flex;align-items:center;gap:8px\"><div class=\"pill\" style=\"${i===state.currentIndex?'outline:2px solid var(--accent);':''}\">${i===state.currentIndex?'▶️':''} ${i+1}</div><div class=\"name\">${escapeHtml(p.name)}${throwsText}</div></div><div style=\"display:flex;align-items:center;gap:8px\"><div class=\"score\">${p.remaining}${projTxt}</div><button class=\"ghost hide-when-playing\" title=\"Odebrat\" onclick=\"removePlayer('${p.id}')\">✖</button></div>`; box.appendChild(el); }); updateTurnInfo(); updateSticky(); updateTopBar(); const playing=isInProgress(); const nameInp=document.getElementById('newPlayerName'); const addBtn=document.getElementById('addPlayerBtn'); if(nameInp) nameInp.disabled=playing; if(addBtn) addBtn.disabled=playing; }
-function renderLiveHistory(){ const box=document.getElementById('liveHistory'); if(!box) return; box.innerHTML=''; const p=currentPlayer(); if(p && p.turnThrows && p.turnThrows.length){ const row=document.createElement('div'); row.className='hist-row'; row.innerHTML=`<div><b>${escapeHtml(p.name)}</b> – rozpracovaný tah: ${p.turnThrows.map(formatDart).join(', ')} (=${p.turnThrows.reduce((a,d)=>a+d.score,0)})</div>`; box.appendChild(row);} for(let i=state.leg.turns.length-1;i>=0;i--){ const t=state.leg.turns[i]; const row=document.createElement('div'); row.className='hist-row'; row.innerHTML=`<div><b>${escapeHtml(t.playerName)}</b> → ${t.darts.map(formatDart).join(', ')} <span class=\"muted\">(=${t.turnTotal})</span> ${t.bust?'<span style=\"color:var(--warn)\">BUST</span>':''} <span class=\"muted small\">zůstatek: ${t.remainingAfter}</span></div>`; box.appendChild(row);} }
-function renderFullHistory(){ const box=document.getElementById('fullHistory'); if(!box) return; box.innerHTML=''; if(state.history.legs.length===0){ box.innerHTML='<div class="hist-row muted">Zatím žádná odehraná kola.</div>'; return; } state.history.legs.slice().reverse().forEach((leg,idx)=>{ const wrap=document.createElement('div'); wrap.className='hist-row'; const winner=state.history.players.find(p=>p.id===leg.winnerId); wrap.innerHTML=`<div><b>Leg #${state.history.legs.length-idx}</b> • start: ${leg.startingScore||'-'} • ${leg.doubleOut?'double-out':'standard'} ${leg.aborted?' • <span style=\"color:var(--warn)\">ukončeno</span>':''} • vítěz: <b>${winner?escapeHtml(winner.name):'—'}</b> <span class=\"small muted\">${new Date(leg.createdAt||Date.now()).toLocaleString()}</span></div>`; (leg.turns||[]).forEach(t=>{ const line=document.createElement('div'); line.className='small muted'; line.style.marginLeft='8px'; line.textContent=`${t.playerName}: ${t.darts.map(d=>`${d.mul}×${d.base}=${d.score}`).join(', ')} = ${t.turnTotal}${t.bust?' (BUST)':''} → ${t.remainingAfter}`; wrap.appendChild(line); }); box.appendChild(wrap); }); }
-function renderLeaderboard(){ const tbody=document.querySelector('#leaderTable tbody'); if(!tbody) return; const arr=state.history.players.slice().sort((a,b)=>(b.wins||0)-(a.wins||0)); tbody.innerHTML=arr.map((p,i)=>`<tr><td>${i+1}.</td><td>${escapeHtml(p.name)}</td><td>${p.wins||0}</td></tr>`).join(''); }
-function updateTurnInfo(){
-  const el=document.getElementById('turnInfo'); const p=currentPlayer();
-  el.innerHTML = p ? `<span class="dot"></span>Na tahu: <b>${escapeHtml(p.name)}</b> • Zbývá: ${p.remaining}` : '—';
+function renderPlayers(){
+  var box = document.getElementById('players');
+  if(!box) return;
+
+  // vyprázdnit kontejner
+  box.innerHTML = '';
+
+  for (var i=0; i<state.players.length; i++){
+    (function(i){
+      var p = state.players[i];
+
+      var throwsTxt = (p.turnThrows && p.turnThrows.length)
+        ? ' [' + p.turnThrows.map(formatDartShort).join(', ') + ']'
+        : '';
+
+      // řádek hráče
+      var row = document.createElement('div');
+      row.className = 'player';
+      row.setAttribute('data-id', p.id);
+
+      // levá část (pořadí + jméno)
+      var left = document.createElement('div');
+      left.style.display = 'flex';
+      left.style.alignItems = 'center';
+      left.style.gap = '8px';
+
+      var pill = document.createElement('div');
+      pill.className = 'pill';
+      if(i === state.currentIndex) pill.style.outline = '2px solid var(--accent)';
+      pill.textContent = (i===state.currentIndex ? '▶️ ' : '') + (i+1);
+
+      var name = document.createElement('div');
+      name.className = 'name';
+      name.textContent = p.name + (throwsTxt ? ' ' + throwsTxt : '');
+
+      left.appendChild(pill);
+      left.appendChild(name);
+
+      // pravá část (skóre + odebrat)
+      var right = document.createElement('div');
+      right.style.display = 'flex';
+      right.style.alignItems = 'center';
+      right.style.gap = '8px';
+
+      var score = document.createElement('div');
+      score.className = 'score';
+      score.textContent = p.remaining;
+
+      var remove = document.createElement('button');
+      remove.className = 'ghost';
+      remove.title = 'Odebrat';
+      remove.textContent = '✖';
+      remove.addEventListener('click', (function(id){
+        return function(){ removePlayer(id); };
+      })(p.id));
+
+      right.appendChild(score);
+      right.appendChild(remove);
+
+      row.appendChild(left);
+      row.appendChild(right);
+      box.appendChild(row);
+    })(i);
+  }
+
+  updateTurnInfo();
+  updateSticky();
+  updateTopBar();
+  renderTips();
 }
+
 
 function updateSticky(){
   const bar=document.getElementById('stickyBar'); if(!bar) return;

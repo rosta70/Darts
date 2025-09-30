@@ -105,74 +105,57 @@
       .chip{padding:10px 12px}
       .brand-title{font-size:18px}
     }
-  #activeTopName{font-size:22px;font-weight:900;letter-spacing:.3px;text-transform:uppercase}
-#activeTopRemain, #activeTopThrows, #activeTopTip{font-size:16px}
-/* === Světlé téma – viditelné ovládací prvky === */
-body.theme-light .tab{background:#eef3ff}
-body.theme-light .chip{background:#ffffff}
-body.theme-light #multiplier .chip[data-mul="1"]{background:var(--mul1)}
-body.theme-light #multiplier .chip[data-mul="2"]{background:var(--mul2)}
-body.theme-light #multiplier .chip[data-mul="3"]{background:var(--mul3)}
-body.theme-light .player{background:#ffffff}
-body.theme-light .key{background:#f7f9ff}
-body.theme-light .key.miss{background:#ffe8ee}
-body.theme-light .history{background:#ffffff}
-body.theme-light button{border-color:#cfd6f1;color:#0f1230}
-body.theme-light button.primary{background:linear-gradient(180deg,#f0f4ff,#e3e9ff);border-color:#b9d1ff;color:#0f1230}
-body.theme-light button.warn{background:#fff4d6;border-color:#e8c66a;color:#5a3b00}
-body.theme-light button.danger{background:#ffe5e5;border-color:#f5a3a3;color:#7a1a1a}
-/* === Světlé téma – opravy viditelnosti hráčů === */
-/* Zajistíme kontrast pro všechny světlé varianty */
-body.theme-light .col,
-body.theme-light-blue .col,
-body.theme-light-mint .col,
-body.theme-light-rose .col,
-body.theme-light-sand .col,
-body.theme-contrast .col{ background:#ffffff; border-color:var(--border); }
 
-body.theme-light .players,
-body.theme-light-blue .players,
-body.theme-light-mint .players,
-body.theme-light-rose .players,
-body.theme-light-sand .players,
-body.theme-contrast .players{ background:#ffffff; }
+    #activeTopName{font-size:22px;font-weight:900;letter-spacing:.3px;text-transform:uppercase}
+    #activeTopRemain, #activeTopThrows, #activeTopTip{font-size:16px}
 
-body.theme-light .player,
-body.theme-light-blue .player,
-body.theme-light-mint .player,
-body.theme-light-rose .player,
-body.theme-light-sand .player,
-body.theme-contrast .player{ background:#ffffff; border-color:#cfd6f1; color:#0f1230; }
+    /* === Světlé téma – lepší kontrast prvků === */
+    body.theme-light .tab{background:#eef3ff}
+    body.theme-light .chip{background:#ffffff}
+    body.theme-light #multiplier .chip[data-mul="1"]{background:var(--mul1)}
+    body.theme-light #multiplier .chip[data-mul="2"]{background:var(--mul2)}
+    body.theme-light #multiplier .chip[data-mul="3"]{background:var(--mul3)}
+    body.theme-light .player{background:#ffffff}
+    body.theme-light .key{background:#f7f9ff}
+    body.theme-light .key.miss{background:#ffe8ee}
+    body.theme-light .history{background:#ffffff}
+    body.theme-light button{border-color:#cfd6f1;color:#0f1230}
+    body.theme-light button.primary{background:linear-gradient(180deg,#f0f4ff,#e3e9ff);border-color:#b9d1ff;color:#0f1230}
+    body.theme-light button.warn{background:#fff4d6;border-color:#e8c66a;color:#5a3b00}
+    body.theme-light button.danger{background:#ffe5e5;border-color:#f5a3a3;color:#7a1a1a}
 
-body.theme-light .player .name,
-body.theme-light .player .score,
-body.theme-light-blue .player .name,
-body.theme-light-blue .player .score,
-body.theme-light-mint .player .name,
-body.theme-light-mint .player .score,
-body.theme-light-rose .player .name,
-body.theme-light-rose .player .score,
-body.theme-light-sand .player .name,
-body.theme-light-sand .player .score,
-body.theme-contrast .player .name,
-body.theme-contrast .player .score{ color:#0f1230; }
-
-body.theme-light .pill,
-body.theme-light-blue .pill,
-body.theme-light-mint .pill,
-body.theme-light-rose .pill,
-body.theme-light-sand .pill,
-body.theme-contrast .pill{ background:#eef3ff; color:#2b345a; border-color:#cfd6f1; }
-
-/* Tlačítka uvnitř světlých témat */
-body.theme-light button,
-body.theme-light-blue button,
-body.theme-light-mint button,
-body.theme-light-rose button,
-body.theme-light-sand button,
-body.theme-contrast button{ color:#0f1230; border-color:#cfd6f1; }
-
-</style>
+    /* světelná témata – viditelnost hráčů */
+    body.theme-light .col,
+    body.theme-light-blue .col,
+    body.theme-light-mint .col,
+    body.theme-light-rose .col,
+    body.theme-light-sand .col,
+    body.theme-contrast .col{ background:#ffffff; border-color:var(--border); }
+    body.theme-light .player,
+    body.theme-light-blue .player,
+    body.theme-light-mint .player,
+    body.theme-light-rose .player,
+    body.theme-light-sand .player,
+    body.theme-contrast .player{ background:#ffffff; border-color:#cfd6f1; color:#0f1230; }
+    body.theme-light .player .name,
+    body.theme-light .player .score,
+    body.theme-light-blue .player .name,
+    body.theme-light-blue .player .score,
+    body.theme-light-mint .player .name,
+    body.theme-light-mint .player .score,
+    body.theme-light-rose .player .name,
+    body.theme-light-rose .player .score,
+    body.theme-light-sand .player .name,
+    body.theme-light-sand .player .score,
+    body.theme-contrast .player .name,
+    body.theme-contrast .player .score{ color:#0f1230; }
+    body.theme-light .pill,
+    body.theme-light-blue .pill,
+    body.theme-light-mint .pill,
+    body.theme-light-rose .pill,
+    body.theme-light-sand .pill,
+    body.theme-contrast .pill{ background:#eef3ff; color:#2b345a; border-color:#cfd6f1; }
+  </style>
 </head>
 <body class="theme-dark color-keys sticky-info minimal">
 <div class="wrap">
@@ -311,288 +294,376 @@ body.theme-contrast button{ color:#0f1230; border-color:#cfd6f1; }
 <div class="stickybar" id="stickyBar">—</div>
 
 <script>
-// PWA (install)
+/* ===== PWA (install) ===== */
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js').catch(()=>{});
+  window.addEventListener('load', function(){
+    navigator.serviceWorker.register('./sw.js').catch(function(){});
   });
 }
-let deferredPrompt = null;
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault(); deferredPrompt = e;
-  ['installBtn','installBtnHeader','installBtnSettings'].forEach(id=>{ const b=document.getElementById(id); if(b) b.style.display='inline-block'; });
+var deferredPrompt=null;
+window.addEventListener('beforeinstallprompt', function(e){
+  e.preventDefault(); deferredPrompt=e;
+  ['installBtn','installBtnHeader','installBtnSettings'].forEach(function(id){ var b=document.getElementById(id); if(b) b.style.display='inline-block'; });
 });
-window.addEventListener('appinstalled', ()=>{
-  deferredPrompt = null;
-  ['installBtn','installBtnHeader','installBtnSettings'].forEach(id=>{ const b=document.getElementById(id); if(b) b.style.display='none'; });
+window.addEventListener('appinstalled', function(){
+  deferredPrompt=null;
+  ['installBtn','installBtnHeader','installBtnSettings'].forEach(function(id){ var b=document.getElementById(id); if(b) b.style.display='none'; });
 });
-function doInstall(){ if(!deferredPrompt){ alert('Instalace zatím není k dispozici.'); return; } deferredPrompt.prompt(); deferredPrompt.userChoice.then(()=>{ deferredPrompt=null; }); }
-['installBtn','installBtnHeader','installBtnSettings'].forEach(id=>{ const b=document.getElementById(id); if(b) b.addEventListener('click', doInstall); });
+function doInstall(){ if(!deferredPrompt){ alert('Instalace zatím není k dispozici.'); return; } deferredPrompt.prompt(); deferredPrompt.userChoice.then(function(){ deferredPrompt=null; }); }
+['installBtn','installBtnHeader','installBtnSettings'].forEach(function(id){ var b=document.getElementById(id); if(b) b.addEventListener('click', doInstall); });
 
-// TTS – pouze syntéza řeči (bez MP3)
-let voices=[];
+/* ===== TTS – pouze syntéza (bez MP3) ===== */
+var voices=[];
 function loadVoices(){ try{ voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : []; }catch(e){ voices=[]; } }
 if('speechSynthesis' in window){ loadVoices(); if('onvoiceschanged' in window.speechSynthesis){ window.speechSynthesis.onvoiceschanged = loadVoices; } }
-function pickCzechVoice(){ if(!voices.length) return null; const by=(c)=>voices.find(v=>v.lang && v.lang.toLowerCase().startsWith(c)); return by('cs')||by('sk')||by('pl')||voices[0]; }
-function speakText(t){ if(!state.soundOn) return; if(!('speechSynthesis' in window)) return; try{ const u=new SpeechSynthesisUtterance(String(t)); const v=pickCzechVoice(); if(v) u.voice=v; u.rate=1; u.pitch=1; u.volume=1; try{ window.speechSynthesis.cancel(); }catch(e){} window.speechSynthesis.speak(u);}catch(e){} }
+function pickCzechVoice(){ if(!voices.length) return null; function by(c){ return voices.find(function(v){ return v.lang && v.lang.toLowerCase().indexOf(c)===0; }); } return by('cs')||by('sk')||by('pl')||voices[0]; }
+function speakText(t){ if(!state.soundOn) return; if(!('speechSynthesis' in window)) return; try{ var u=new SpeechSynthesisUtterance(String(t)); var v=pickCzechVoice(); if(v) u.voice=v; u.rate=1; u.pitch=1; u.volume=1; try{ window.speechSynthesis.cancel(); }catch(e){} window.speechSynthesis.speak(u);}catch(e){} }
+function playNumber(n){ speakText(n); }
+function playWord(w){ speakText(w==='vyhra'?'Výhra':(w==='bust'?'Bust':w)); }
 
-// Stav
-const state={ startingScore:301,doubleOut:false,soundOn:true,players:[],currentIndex:0,leg:{id:ts(),turns:[]},history:loadHistory(),multiplier:1,settings:loadSettings() };
+/* ===== Stav ===== */
+var state={
+  startingScore:301,
+  doubleOut:false,
+  soundOn:true,
+  players:[],
+  currentIndex:0,
+  leg:{ id:ts(), turns:[], startingScore:301, doubleOut:false, createdAt:new Date().toISOString() },
+  history: loadHistory(),
+  multiplier:1,
+  settings: loadSettings()
+};
 function ts(){return Date.now();}
 function loadHistory(){ try{ return JSON.parse(localStorage.getItem('dartsHistoryV1'))||{players:[],legs:[]}; }catch(e){ return {players:[],legs:[]}; } }
 function saveHistory(){ localStorage.setItem('dartsHistoryV1', JSON.stringify(state.history)); }
-function loadSettings(){ try{ return JSON.parse(localStorage.getItem('dartsSettingsV1'))||{theme:'theme-dark',colorizeKeys:true,minimalUi:true,stickyBar:true,ttsFallback:true,showTips:true}; }catch(e){ return {theme:'theme-dark',colorizeKeys:true,minimalUi:true,stickyBar:true,ttsFallback:true,showTips:true}; } }
+function loadSettings(){ try{ return JSON.parse(localStorage.getItem('dartsSettingsV1'))||{theme:'theme-dark',colorizeKeys:true,minimalUi:true,stickyBar:true,showTips:true}; }catch(e){ return {theme:'theme-dark',colorizeKeys:true,minimalUi:true,stickyBar:true,showTips:true}; } }
 function saveSettings(){ localStorage.setItem('dartsSettingsV1', JSON.stringify(state.settings)); }
 function loadActive(){ try{ return JSON.parse(localStorage.getItem('dartsActiveV1'))||null; }catch(e){ return null; } }
-function saveActive(){ const snapshot={ startingScore:state.startingScore,doubleOut:state.doubleOut,players:state.players,currentIndex:state.currentIndex,leg:state.leg }; localStorage.setItem('dartsActiveV1', JSON.stringify(snapshot)); }
-function clearActive(){ localStorage.removeItem('dartsActiveV1'); }
+function saveActive(){ var snapshot={ startingScore:state.startingScore,doubleOut:state.doubleOut,players:state.players,currentIndex:state.currentIndex,leg:state.leg,soundOn:state.soundOn }; localStorage.setItem('dartsActiveV1', JSON.stringify(snapshot)); }
 
-// Panely
-const panels=document.querySelectorAll('[data-panel]');
-const tabs=document.querySelectorAll('.tab[data-tab]');
-for(const tab of tabs){ tab.addEventListener('click',()=>{ document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active')); tab.classList.add('active'); const target=tab.getAttribute('data-tab'); panels.forEach(p=>p.hidden=p.getAttribute('data-panel')!==target); if(target==='history') renderFullHistory(); if(target==='leaderboard') renderLeaderboard(); }); }
-function setStatus(msg){ const el=document.getElementById('statusPill'); if(el) el.textContent=msg; }
+/* ===== Panely ===== */
+var panels=document.querySelectorAll('[data-panel]');
+var tabs=document.querySelectorAll('.tab[data-tab]');
+for(var i=0;i<tabs.length;i++){
+  (function(tab){
+    tab.addEventListener('click',function(){
+      var all=document.querySelectorAll('.tab'); for(var j=0;j<all.length;j++) all[j].classList.remove('active');
+      tab.classList.add('active');
+      var target=tab.getAttribute('data-tab');
+      for(var k=0;k<panels.length;k++) panels[k].hidden = panels[k].getAttribute('data-panel')!==target;
+      if(target==='history') renderFullHistory();
+      if(target==='leaderboard') renderLeaderboard();
+    });
+  })(tabs[i]);
+}
+function setStatus(msg){ var el=document.getElementById('statusPill'); if(el) el.textContent=msg; }
 
-// Hra
-function isInProgress(){ return (state.leg && state.leg.turns && state.leg.turns.length>0) || state.players.some(p=>p.turnThrows && p.turnThrows.length>0); }
-function addPlayer(){ if(isInProgress()){ alert('Během hry nelze přidávat hráče.'); return; } const inp=document.getElementById('newPlayerName'); const name=(inp.value||'').trim(); if(!name) return; const id='p'+ts(); const existing=state.history.players.find(p=>p.name.toLowerCase()===name.toLowerCase()); const wins=existing? (existing.wins||0):0; const player={id,name,wins,remaining:state.startingScore,turnThrows:[]}; state.players.push(player); if(!existing) state.history.players.push({id,name,wins}); inp.value=''; renderPlayers(); saveHistory(); saveActive(); if(state.players.length===1) setStatus('Přidejte další hráče nebo začněte hru.'); }
-function removePlayer(id){ if(isInProgress()){ alert('Během hry nelze upravovat soupisku.'); return; } const idx=state.players.findIndex(p=>p.id===id); if(idx>-1){ state.players.splice(idx,1); if(state.currentIndex>=state.players.length) state.currentIndex=0; renderPlayers(); saveActive(); } }
-function setGame(val){ if(isInProgress()){ alert('Nelze měnit typ hry v průběhu legu.'); return; } state.startingScore=Number(val); for(const p of state.players){ p.remaining=state.startingScore; p.turnThrows=[]; } state.leg={id:ts(),turns:[]}; renderPlayers(); renderLiveHistory(); setStatus(`Nastaveno ${state.startingScore}.`); saveActive(); }
-function toggleDoubleOut(on){ if(isInProgress()){ alert('Double-out lze měnit jen před legem.'); const d=document.getElementById('doubleOut'); if(d) d.checked=state.doubleOut; return;} state.doubleOut=on; setStatus(`Double-out ${on?'zapnuto':'vypnuto'}.`); saveActive(); }
-function toggleSound(on){ state.soundOn=on; setStatus(`Čtení hodnot ${on?'zapnuto':'vypnuto'}.`); saveActive(); }
+/* ===== Logika hry ===== */
+function isInProgress(){
+  return (state.leg && state.leg.turns && state.leg.turns.length>0)
+      || state.players.some(function(p){ return p.turnThrows && p.turnThrows.length>0; });
+}
+function addPlayer(){
+  if(isInProgress()){ alert('Během hry nelze přidávat hráče.'); return; }
+  var inp=document.getElementById('newPlayerName'); var name=(inp.value||'').trim(); if(!name) return;
+  var id='p'+ts();
+  var existing=(state.history.players||[]).find(function(p){ return (p.name||'').toLowerCase()===name.toLowerCase(); });
+  var wins=existing? (existing.wins||0) : 0;
+  var player={id:id,name:name,wins:wins,remaining:state.startingScore,turnThrows:[]};
+  state.players.push(player);
+  if(!existing){ (state.history.players=state.history.players||[]).push({id:id,name:name,wins:wins}); }
+  inp.value='';
+  renderPlayers(); saveHistory(); saveActive();
+  if(state.players.length===1) setStatus('Přidejte další hráče nebo začněte hru.');
+}
+function removePlayer(id){
+  if(isInProgress()){ alert('Během hry nelze upravovat soupisku.'); return; }
+  var idx=state.players.findIndex(function(p){ return p.id===id; });
+  if(idx>-1){ state.players.splice(idx,1); if(state.currentIndex>=state.players.length) state.currentIndex=0; renderPlayers(); saveActive(); }
+}
+function setGame(val){
+  if(isInProgress()){ alert('Nelze měnit typ hry v průběhu legu.'); return; }
+  state.startingScore=Number(val);
+  state.players.forEach(function(p){ p.remaining=state.startingScore; p.turnThrows=[]; });
+  state.leg={ id:ts(), turns:[], startingScore:state.startingScore, doubleOut:state.doubleOut, createdAt:new Date().toISOString() };
+  renderPlayers(); renderLiveHistory(); setStatus('Nastaveno '+state.startingScore+'.'); saveActive();
+}
+function toggleDoubleOut(on){ if(isInProgress()){ alert('Double-out lze měnit jen před legem.'); var d=document.getElementById('doubleOut'); if(d) d.checked=state.doubleOut; return;} state.doubleOut=on; saveActive(); }
+function toggleSound(on){ state.soundOn=on; saveActive(); }
 
-function startNewLeg(){ if(state.players.length===0){ alert('Přidejte alespoň jednoho hráče.'); return; } for(const p of state.players){ p.remaining=state.startingScore; p.turnThrows=[]; } state.currentIndex=0; state.leg={ id:ts(), turns:[], startingScore:state.startingScore, doubleOut:state.doubleOut, createdAt:new Date().toISOString() }; renderPlayers(); renderLiveHistory(); setStatus('Začíná nové kolo.'); updateUI(); saveActive(); }
-function startGameRandom(){ if(state.players.length===0){ alert('Přidejte alespoň jednoho hráče.'); return; }
-  if(isInProgress()){ if(!confirm('Hra je rozjetá. Ukončit a začít novou s náhodným pořadím?')) return; // uložit nedokončený leg
-    state.history.legs.push({ ...state.leg, aborted:true }); saveHistory(); }
-  // zamíchat pořadí
-  shuffleArray(state.players);
-  // reset skóre a leg
-  for(const p of state.players){ p.remaining=state.startingScore; p.turnThrows=[]; }
+function startNewLeg(){
+  if(state.players.length===0){ alert('Přidejte alespoň jednoho hráče.'); return; }
+  state.players.forEach(function(p){ p.remaining=state.startingScore; p.turnThrows=[]; });
+  state.currentIndex=0;
+  state.leg={ id:ts(), turns:[], startingScore:state.startingScore, doubleOut:state.doubleOut, createdAt:new Date().toISOString() };
+  renderPlayers(); renderLiveHistory(); setStatus('Začíná nové kolo.'); updateUI(); saveActive();
+}
+function startGameRandom(){
+  if(state.players.length===0){ alert('Přidejte alespoň jednoho hráče.'); return; }
+  if(isInProgress()){
+    if(!confirm('Hra je rozjetá. Ukončit a začít novou s náhodným pořadím?')) return;
+    state.history.legs.push(Object.assign({}, state.leg, {aborted:true})); saveHistory();
+  }
+  // zamíchat pořadí (Fisher–Yates)
+  for(var i=state.players.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var tmp=state.players[i]; state.players[i]=state.players[j]; state.players[j]=tmp; }
+  state.players.forEach(function(p){ p.remaining=state.startingScore; p.turnThrows=[]; });
   state.currentIndex=0;
   state.leg={ id:ts(), turns:[], startingScore:state.startingScore, doubleOut:state.doubleOut, createdAt:new Date().toISOString() };
   renderPlayers(); renderLiveHistory(); updateUI(); saveActive();
-  setStatus('Začínáme – pořadí: '+ state.players.map(p=>p.name).join(', '));
+  setStatus('Začínáme – pořadí: '+ state.players.map(function(p){return p.name;}).join(', '));
 }
-function abortLeg(){ if(!isInProgress()){ alert('Není co ukončit.'); return; } if(!confirm('Ukončit rozehranou hru? Rozpracovaný leg bude uložen jako nedokončený.')) return; state.history.legs.push({ ...state.leg, aborted:true }); saveHistory(); for(const p of state.players){ p.remaining=state.startingScore; p.turnThrows=[]; } state.currentIndex=0; state.leg={ id:ts(), turns:[], startingScore:state.startingScore, doubleOut:state.doubleOut, createdAt:new Date().toISOString() }; renderPlayers(); renderLiveHistory(); updateUI(); saveActive(); setStatus('Hra ukončena.'); }
+function abortLeg(){
+  if(!isInProgress()){ alert('Není co ukončit.'); return; }
+  if(!confirm('Ukončit rozehranou hru? Rozpracovaný leg bude uložen jako nedokončený.')) return;
+  state.history.legs.push(Object.assign({}, state.leg, {aborted:true}));
+  saveHistory();
+  state.players.forEach(function(p){ p.remaining=state.startingScore; p.turnThrows=[]; });
+  state.currentIndex=0;
+  state.leg={ id:ts(), turns:[], startingScore:state.startingScore, doubleOut:state.doubleOut, createdAt:new Date().toISOString() };
+  renderPlayers(); renderLiveHistory(); updateUI(); saveActive(); setStatus('Hra ukončena.');
+}
 function currentPlayer(){ return state.players[state.currentIndex]; }
 function nextPlayer(){ state.currentIndex=(state.currentIndex+1)%state.players.length; }
 
-// Zvuk – TTS only
-function playNumber(n){ speakText(n); }
-function playWord(word){ speakText(word==='vyhra' ? 'Výhra' : (word==='bust' ? 'Bust' : word)); }
+/* ===== Zadávání hodů ===== */
+function enterScore(base,mul){
+  mul = mul || state.multiplier;
+  var p=currentPlayer(); if(!p){ alert('Žádní hráči.'); return; }
+  var score=base*mul; if(state.soundOn){ playNumber(score); }
+  if(!p.turnThrows) p.turnThrows=[];
+  if(p.turnThrows.length>=3){ finishTurn(); return; }
+  p.turnThrows.push({base:base,mul:mul,score:score});
+  renderPlayers(); renderLiveHistory(); renderTips();
+  if(p.turnThrows.length===3){ finishTurn(); }
+  state.multiplier=1; var chips=document.querySelectorAll('#multiplier .chip'); for(var i=0;i<chips.length;i++) chips[i].classList.remove('active'); var sbtn=document.querySelector('#multiplier .chip[data-mul="1"]'); if(sbtn) sbtn.classList.add('active');
+  updateUI(); saveActive();
+}
+function finishTurn(){
+  var p=currentPlayer(); if(!p) return;
+  var darts=p.turnThrows||[]; if(darts.length===0){ nextPlayer(); renderPlayers(); saveActive(); return; }
+  var turnTotal=darts.reduce(function(a,d){return a+d.score;},0);
+  var remaining=p.remaining - turnTotal;
+  var bust=false;
 
-// Zadávání hodů
-function enterScore(base,mul){ mul=mul||state.multiplier; const player=currentPlayer(); if(!player){ alert('Žádní hráči.'); return; } const score=base*mul; if(state.soundOn){ playNumber(score); }
-  if(!player.turnThrows) player.turnThrows=[]; if(player.turnThrows.length>=3){ finishTurn(); return; }
-  player.turnThrows.push({base,mul,score}); renderPlayers(); renderLiveHistory(); renderTips();
-  if(player.turnThrows.length===3){ finishTurn(); }
-  state.multiplier=1; document.querySelectorAll('#multiplier .chip').forEach(c=>c.classList.remove('active')); const sbtn=document.querySelector('#multiplier .chip[data-mul="1"]'); if(sbtn) sbtn.classList.add('active');
-  updateUI(); saveActive(); }
+  if(remaining<0){ bust=true; remaining=p.remaining; }
+  else if(remaining===0){ if(state.doubleOut){ var last=darts[darts.length-1]; if(last.mul!==2){ bust=true; remaining=p.remaining; } } }
+  else if(state.doubleOut && remaining===1){ bust=true; remaining=p.remaining; }
 
-function finishTurn(){ const player=currentPlayer(); if(!player) return; const darts=player.turnThrows||[]; if(darts.length===0){ nextPlayer(); renderPlayers(); saveActive(); return; }
-  const turnTotal=darts.reduce((a,d)=>a+d.score,0); let remaining=player.remaining - turnTotal; let bust=false;
-  if (typeof updateTurnInfo === 'function') updateTurnInfo();
-if (typeof updateSticky    === 'function') updateSticky();
-if (typeof updateTopBar    === 'function') updateTopBar();
-if (typeof renderTips      === 'function') renderTips();
-  if(remaining<0){ bust=true; remaining=player.remaining; } else if(remaining===0){ if(state.doubleOut){ const last=darts[darts.length-1]; if(last.mul!==2){ bust=true; remaining=player.remaining; } } } else if(state.doubleOut && remaining===1){ bust=true; remaining=player.remaining; }
-  if(!bust){ player.remaining=remaining; }
-  const record={ playerId:player.id, playerName:player.name, darts:deepClone(darts), turnTotal, bust, remainingAfter:player.remaining, when:new Date().toISOString() };
+  if(!bust){ p.remaining=remaining; }
+
+  var record={ playerId:p.id, playerName:p.name, darts:deepClone(darts), turnTotal:turnTotal, bust:bust, remainingAfter:p.remaining, when:new Date().toISOString() };
   state.leg.turns.push(record);
-  if(state.soundOn){ if(bust){ playWord('bust'); } else if(false){ playNumber(turnTotal); } }
-  if(player.remaining===0){ playWord('vyhra'); const winnerId=player.id; state.history.legs.push({ ...state.leg, winnerId }); const hp=state.history.players.find(p=>p.id===player.id); if(hp){ hp.wins=(hp.wins||0)+1; } saveHistory(); alert(`Vítěz: ${player.name}!`); setStatus(`Vítěz: ${player.name}`); startNewLeg(); renderLeaderboard(); updateUI(); saveActive(); return; }
-  player.turnThrows=[]; nextPlayer(); renderPlayers(); renderLiveHistory(); updateTurnInfo(); saveHistory(); updateUI(); saveActive(); renderTips(); }
 
-function undoLastDart(){ const p=currentPlayer(); if(p && p.turnThrows && p.turnThrows.length>0){ p.turnThrows.pop(); renderPlayers(); renderLiveHistory(); updateUI(); renderTips(); saveActive(); return; } const last=state.leg.turns[state.leg.turns.length-1]; if(!last){ setStatus('Nic k vrácení.'); return; } const idx=state.players.findIndex(pl=>pl.id===last.playerId); if(idx!==-1) state.currentIndex=idx; const pl=currentPlayer(); pl.remaining= last.bust? pl.remaining : last.remainingAfter + last.turnTotal; pl.turnThrows=last.darts; state.leg.turns.pop(); renderPlayers(); renderLiveHistory(); updateUI(); renderTips(); saveActive(); }
+  if(state.soundOn){ if(bust){ playWord('bust'); } }
 
-// Checkout tipy
-const UNFINISHABLE=new Set([169,168,166,165,163,162,159]);
-const TPR=[20,19,18,17,16,15];
-function suggestDoubleOut(rem){ const res=[]; if(rem>170||rem<=1||UNFINISHABLE.has(rem)) return res; if(rem===50) return [['D25']]; if(rem%2===0 && rem<=40) return [[`D${rem/2}`]]; for(const t of TPR){ const r=rem-3*t; if(r===50){ res.push([`T${t}`, 'D25']); break; } if(r>0 && r%2===0 && r<=40){ res.push([`T${t}`, `D${r/2}`]); if(res.length>=3) break; } } if(res.length>=3) return res; outer: for(const t of TPR){ for(let s=20;s>=1;s--){ const r=rem-3*t - s; if(r===50){ res.push([`T${t}`, `S${s}`, 'D25']); } else if(r>0 && r%2===0 && r<=40){ res.push([`T${t}`, `S${s}`, `D${r/2}`]); } if(res.length>=3) break outer; } } if(res.length>=3) return res; for(const t1 of TPR){ for(const t2 of TPR){ const r=rem-3*t1-3*t2; if(r===50){ res.push([`T${t1}`,`T${t2}`,'D25']); } else if(r>0 && r%2===0 && r<=40){ res.push([`T${t1}`,`T${t2}`,`D${r/2}`]); } if(res.length>=3) break; } if(res.length>=3) break; } return res; }
-function suggestSingleOut(rem){ const res=[]; if(rem<=0) return res; if(rem<=50){ if(rem===50) return [['Bull']]; return [[`S${rem}`]]; } for(const t of TPR){ const r=rem-3*t; if(r>=0 && r<=50){ if(r===50) res.push([`T${t}`, 'Bull']); else res.push([`T${t}`, `S${r}`]); if(res.length>=3) break; } } if(!res.length){ for(const t of TPR){ const r=rem-3*t; const targets=[40,32,24,16,8,2,50]; for(const d of targets){ const s=r-d; if(s>=0 && s<=20){ res.push([`T${t}`, `S${s}`, (d===50?'Bull':`S${d}`)]); break; } } if(res.length) break; } } return res; }
-function getProjectedRemaining(p){ const used=(p.turnThrows||[]).reduce((a,d)=>a+d.score,0); return p.remaining - used; }
-function renderTips(){ const box=document.getElementById('checkoutTips'); const tipPill=document.getElementById('activeTopTip'); const showOpt=document.getElementById('showTips'); if(!box) return; const showTips = showOpt ? showOpt.checked : true; if(!showTips){ box.textContent=''; if(tipPill) tipPill.style.display='none'; return; } const p=currentPlayer(); if(!p){ box.textContent=''; if(tipPill) tipPill.style.display='none'; return; } const proj=getProjectedRemaining(p); const limit = state.doubleOut ? 170 : 120; if(proj<=0 || proj>limit || UNFINISHABLE.has(proj)){ box.textContent=''; if(tipPill) tipPill.style.display='none'; return; } const tips = state.doubleOut? suggestDoubleOut(proj): suggestSingleOut(proj); if(!tips.length){ box.textContent=''; if(tipPill) tipPill.style.display='none'; return; } const strings=tips.map(arr=>arr.join(' → ')); const text='Tipy: '+strings.join(' | '); box.textContent = text; if(tipPill){ tipPill.textContent = strings[0]; tipPill.style.display='inline-block'; } }
+  if(p.remaining===0){
+    playWord('vyhra');
+    state.history.legs.push(Object.assign({}, state.leg, {winnerId:p.id}));
+    var hp=(state.history.players||[]).find(function(x){return x.id===p.id;}); if(hp){ hp.wins=(hp.wins||0)+1; }
+    saveHistory();
+    alert('Vítěz: '+p.name+'!');
+    setStatus('Vítěz: '+p.name);
+    startNewLeg(); renderLeaderboard(); updateUI(); saveActive(); return;
+  }
 
-// Renderování
+  p.turnThrows=[]; nextPlayer();
+  renderPlayers(); renderLiveHistory(); saveHistory(); updateUI(); saveActive(); renderTips();
+}
+function undoLastDart(){
+  var p=currentPlayer();
+  if(p && p.turnThrows && p.turnThrows.length>0){
+    p.turnThrows.pop(); renderPlayers(); renderLiveHistory(); updateUI(); renderTips(); saveActive(); return;
+  }
+  var last=state.leg.turns[state.leg.turns.length-1]; if(!last){ setStatus('Nic k vrácení.'); return; }
+  var idx=state.players.findIndex(function(pl){ return pl.id===last.playerId; });
+  if(idx!==-1) state.currentIndex=idx;
+  var pl=currentPlayer();
+  pl.remaining= last.bust? pl.remaining : last.remainingAfter + last.turnTotal;
+  pl.turnThrows=last.darts;
+  state.leg.turns.pop();
+  renderPlayers(); renderLiveHistory(); updateUI(); renderTips(); saveActive();
+}
+
+/* ===== Tipy (zkrácené) ===== */
+var UNFINISHABLE=new Set([169,168,166,165,163,162,159]);
+var TPR=[20,19,18,17,16,15];
+function suggestDoubleOut(rem){ var res=[]; if(rem>170||rem<=1||UNFINISHABLE.has(rem)) return res; if(rem===50) return [['D25']]; if(rem%2===0 && rem<=40) return [['D'+(rem/2)]]; for(var i=0;i<TPR.length;i++){ var t=TPR[i]; var r=rem-3*t; if(r===50){ res.push(['T'+t,'D25']); break; } if(r>0 && r%2===0 && r<=40){ res.push(['T'+t,'D'+(r/2)]); if(res.length>=3) break; } } return res; }
+function suggestSingleOut(rem){ var res=[]; if(rem<=0) return res; if(rem<=50){ if(rem===50) return [['Bull']]; return [['S'+rem]]; } for(var i=0;i<TPR.length;i++){ var t=TPR[i]; var r=rem-3*t; if(r>=0 && r<=50){ if(r===50) res.push(['T'+t,'Bull']); else res.push(['T'+t,'S'+r]); if(res.length>=3) break; } } return res; }
+function getProjectedRemaining(p){ var used=(p.turnThrows||[]).reduce(function(a,d){return a+d.score;},0); return p.remaining - used; }
+function renderTips(){
+  var box=document.getElementById('checkoutTips'); var tipPill=document.getElementById('activeTopTip'); var showOpt=document.getElementById('showTips'); if(!box) return;
+  var showTips = showOpt ? showOpt.checked : true; if(!showTips){ box.textContent=''; if(tipPill) tipPill.style.display='none'; return; }
+  var p=currentPlayer(); if(!p){ box.textContent=''; if(tipPill) tipPill.style.display='none'; return; }
+  var proj=getProjectedRemaining(p); var limit = state.doubleOut ? 170 : 120;
+  if(proj<=0 || proj>limit || UNFINISHABLE.has(proj)){ box.textContent=''; if(tipPill) tipPill.style.display='none'; return; }
+  var tips = state.doubleOut? suggestDoubleOut(proj): suggestSingleOut(proj);
+  if(!tips.length){ box.textContent=''; if(tipPill) tipPill.style.display='none'; return; }
+  var strings=tips.map(function(arr){return arr.join(' → ');});
+  box.textContent = 'Tipy: '+strings.join(' | ');
+  if(tipPill){ tipPill.textContent = strings[0]; tipPill.style.display='inline-block'; }
+}
+
+/* ===== Renderování ===== */
+function formatDart(d){ var m=d.mul===1?'S':(d.mul===2?'D':'T'); return m+''+d.base+'='+d.score; }
+function formatDartShort(d){ var m=d.mul===1?'S':(d.mul===2?'D':'T'); return m+''+d.base; }
+function escapeHtml(s){ s=(s+""); return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
 function renderPlayers(){
-  var box = document.getElementById('players');
-  if(!box) return;
-
-  // vyprázdnit kontejner
-  box.innerHTML = '';
-
-  for (var i=0; i<state.players.length; i++){
+  var box=document.getElementById('players'); if(!box) return;
+  box.innerHTML='';
+  for(var i=0;i<state.players.length;i++){
     (function(i){
-      var p = state.players[i];
+      var p=state.players[i];
+      var throwsTxt=(p.turnThrows&&p.turnThrows.length)?' ['+p.turnThrows.map(formatDartShort).join(', ')+']':'';
+      var row=document.createElement('div'); row.className='player'; row.setAttribute('data-id',p.id);
 
-      var throwsTxt = (p.turnThrows && p.turnThrows.length)
-        ? ' [' + p.turnThrows.map(formatDartShort).join(', ') + ']'
-        : '';
+      var left=document.createElement('div'); left.style.display='flex'; left.style.alignItems='center'; left.style.gap='8px';
+      var pill=document.createElement('div'); pill.className='pill'; if(i===state.currentIndex) pill.style.outline='2px solid var(--accent)'; pill.textContent=(i===state.currentIndex?'▶️ ':'')+(i+1);
+      var name=document.createElement('div'); name.className='name'; name.textContent=p.name+(throwsTxt?' '+throwsTxt:'');
+      left.appendChild(pill); left.appendChild(name);
 
-      // řádek hráče
-      var row = document.createElement('div');
-      row.className = 'player';
-      row.setAttribute('data-id', p.id);
+      var right=document.createElement('div'); right.style.display='flex'; right.style.alignItems='center'; right.style.gap='8px';
+      var score=document.createElement('div'); score.className='score'; score.textContent=p.remaining;
+      var remove=document.createElement('button'); remove.className='ghost'; remove.title='Odebrat'; remove.textContent='✖';
+      remove.addEventListener('click',(function(id){return function(){ removePlayer(id); };})(p.id));
+      right.appendChild(score); right.appendChild(remove);
 
-      // levá část (pořadí + jméno)
-      var left = document.createElement('div');
-      left.style.display = 'flex';
-      left.style.alignItems = 'center';
-      left.style.gap = '8px';
-
-      var pill = document.createElement('div');
-      pill.className = 'pill';
-      if(i === state.currentIndex) pill.style.outline = '2px solid var(--accent)';
-      pill.textContent = (i===state.currentIndex ? '▶️ ' : '') + (i+1);
-
-      var name = document.createElement('div');
-      name.className = 'name';
-      name.textContent = p.name + (throwsTxt ? ' ' + throwsTxt : '');
-
-      left.appendChild(pill);
-      left.appendChild(name);
-
-      // pravá část (skóre + odebrat)
-      var right = document.createElement('div');
-      right.style.display = 'flex';
-      right.style.alignItems = 'center';
-      right.style.gap = '8px';
-
-      var score = document.createElement('div');
-      score.className = 'score';
-      score.textContent = p.remaining;
-
-      var remove = document.createElement('button');
-      remove.className = 'ghost';
-      remove.title = 'Odebrat';
-      remove.textContent = '✖';
-      remove.addEventListener('click', (function(id){
-        return function(){ removePlayer(id); };
-      })(p.id));
-
-      right.appendChild(score);
-      right.appendChild(remove);
-
-      row.appendChild(left);
-      row.appendChild(right);
+      row.appendChild(left); row.appendChild(right);
       box.appendChild(row);
     })(i);
   }
-
-  updateTurnInfo();
-  updateSticky();
-  updateTopBar();
-  renderTips();
+  updateTurnInfo(); updateSticky(); updateTopBar(); renderTips();
+}
+function renderLiveHistory(){
+  var box=document.getElementById('liveHistory'); if(!box) return;
+  box.innerHTML='';
+  var p=currentPlayer();
+  if(p && p.turnThrows && p.turnThrows.length){
+    var sum=p.turnThrows.reduce(function(a,d){return a+d.score;},0);
+    var row=document.createElement('div'); row.className='hist-row';
+    row.innerHTML='<div><b>'+escapeHtml(p.name)+'</b> – rozpracovaný tah: '+p.turnThrows.map(formatDart).join(', ')+' (='+sum+')</div>';
+    box.appendChild(row);
+  }
+  var turns=state.leg.turns||[];
+  for(var i=turns.length-1;i>=0;i--){
+    var t=turns[i]; var r=document.createElement('div'); r.className='hist-row';
+    r.innerHTML='<div><b>'+escapeHtml(t.playerName)+'</b> → '+t.darts.map(formatDart).join(', ')
+      +' <span class="muted">(='+t.turnTotal+')</span> '+(t.bust?'<span style="color:var(--warn)">BUST</span>':'')
+      +' <span class="muted small">zůstatek: '+t.remainingAfter+'</span></div>';
+    box.appendChild(r);
+  }
+}
+function renderFullHistory(){
+  var box=document.getElementById('fullHistory'); if(!box) return; box.innerHTML='';
+  var legs=(state.history.legs||[]); if(!legs.length){ box.innerHTML='<div class="hist-row muted">Zatím žádná odehraná kola.</div>'; return; }
+  legs.slice().reverse().forEach(function(leg,idx){
+    var wrap=document.createElement('div'); wrap.className='hist-row';
+    var winner=(state.history.players||[]).find(function(p){return p.id===leg.winnerId;});
+    wrap.innerHTML='<div><b>Leg #'+(legs.length-idx)+'</b> • start: '+(leg.startingScore||'-')+' • '+(leg.doubleOut?'double-out':'standard')+(leg.aborted?' • <span style="color:var(--warn)">ukončeno</span>':'')+' • vítěz: <b>'+(winner?escapeHtml(winner.name):'—')+'</b> <span class="small muted">'+new Date(leg.createdAt||Date.now()).toLocaleString()+'</span></div>';
+    (leg.turns||[]).forEach(function(t){
+      var line=document.createElement('div'); line.className='small muted'; line.style.marginLeft='8px';
+      line.textContent=t.playerName+': '+t.darts.map(function(d){return d.mul+'×'+d.base+'='+d.score;}).join(', ')+' = '+t.turnTotal+(t.bust?' (BUST)':'')+' → '+t.remainingAfter;
+      wrap.appendChild(line);
+    });
+    box.appendChild(wrap);
+  });
+}
+function renderLeaderboard(){
+  var tbody=document.querySelector('#leaderTable tbody'); if(!tbody) return;
+  var arr=(state.history.players||[]).slice().sort(function(a,b){return (b.wins||0)-(a.wins||0);});
+  tbody.innerHTML=arr.map(function(p,i){return '<tr><td>'+(i+1)+'.</td><td>'+escapeHtml(p.name)+'</td><td>'+(p.wins||0)+'</td></tr>';}).join('');
 }
 
-
-function updateSticky(){
-  const bar=document.getElementById('stickyBar'); if(!bar) return;
-  const p=currentPlayer();
-  const throwTxt=p && p.turnThrows && p.turnThrows.length ? p.turnThrows.map(formatDartShort).join(', ') : '—';
-  bar.innerHTML = p ? `Na tahu: <b>${escapeHtml(p.name)}</b> • Zbývá: <b>${p.remaining}</b> • Hody: ${throwTxt}` : '—';
+/* ===== Export / import ===== */
+function downloadHistory(){
+  var data=JSON.stringify(state.history,null,2);
+  var blob=new Blob([data],{type:'application/json'});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a'); a.href=url; a.download='darts_history_'+new Date().toISOString().replace(/[:]/g,'-')+'.json';
+  document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
 }
-function updateTopBar(){
-  const top=document.getElementById('activeTop'); if(!top) return;
-  const playing=isInProgress(); top.style.display=playing?'flex':'none'; if(!playing) return;
-  const p=currentPlayer();
-  document.getElementById('activeTopName').textContent = p ? p.name : '—';
-  document.getElementById('activeTopRemain').textContent = p ? ('Zbývá: '+p.remaining) : '';
-  const throwTxt = p && p.turnThrows && p.turnThrows.length ? p.turnThrows.map(formatDartShort).join(', ') : '—';
-  document.getElementById('activeTopThrows').textContent = 'Hody: '+throwTxt;
+function importHistory(){
+  var inp=document.getElementById('importFile'); if(!inp.files.length){ alert('Vyberte JSON.'); return; }
+  var f=inp.files[0]; var r=new FileReader();
+  r.onload=function(){ try{ var obj=JSON.parse(r.result); if(!obj.players||!obj.legs) throw new Error('Neplatný formát'); state.history=obj; saveHistory(); renderFullHistory(); renderLeaderboard(); alert('Načteno.'); }catch(e){ alert('Chyba: '+e.message); } };
+  r.readAsText(f);
 }
-function formatDart(d){ const m=d.mul===1?'S':(d.mul===2?'D':'T'); return `${m}${d.base}=${d.score}`; }
-function formatDartShort(d){ const m=d.mul===1?'S':(d.mul===2?'D':'T'); return `${m}${d.base}`; }
-function escapeHtml(s){ s = (s+""); return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function clearAll(){ if(!confirm('Opravdu smazat veškerou historii?')) return; state.history={players:[],legs:[]}; saveHistory(); renderFullHistory(); renderLeaderboard(); }
 
-// Vzhled
-function applySettings(){ document.body.classList.remove('theme-dark','theme-light','theme-contrast'); document.body.classList.add(state.settings.theme); document.body.classList.toggle('color-keys', !!state.settings.colorizeKeys); document.body.classList.toggle('minimal', !!state.settings.minimalUi); document.body.classList.toggle('sticky-info', !!state.settings.stickyBar); const ttsEl=document.getElementById('ttsFallback'); if(ttsEl) ttsEl.checked= state.settings.ttsFallback!==false; const tipsEl=document.getElementById('showTips'); if(tipsEl) tipsEl.checked= state.settings.showTips!==false; updateUI(); }
-function bindSettingsUI(){ const sel=document.getElementById('themeSelect'); if(sel){ sel.value=state.settings.theme; sel.onchange=()=>{ state.settings.theme=sel.value; saveSettings(); applySettings(); saveActive(); }; }
-  const ck1=document.getElementById('colorizeKeys'); if(ck1){ ck1.checked=!!state.settings.colorizeKeys; ck1.onchange=()=>{ state.settings.colorizeKeys=ck1.checked; saveSettings(); applySettings(); saveActive(); }; }
-  const ck2=document.getElementById('minimalUi'); if(ck2){ ck2.checked=!!state.settings.minimalUi; ck2.onchange=()=>{ state.settings.minimalUi=ck2.checked; saveSettings(); applySettings(); saveActive(); }; }
-  const ck3=document.getElementById('stickyBarToggle'); if(ck3){ ck3.checked=!!state.settings.stickyBar; ck3.onchange=()=>{ state.settings.stickyBar=ck3.checked; saveSettings(); applySettings(); saveActive(); }; }
-  const ck4=document.getElementById('ttsFallback'); if(ck4){ ck4.checked= state.settings.ttsFallback!==false; ck4.onchange=()=>{ state.settings.ttsFallback=ck4.checked; saveSettings(); }; }
-  const ck5=document.getElementById('showTips'); if(ck5){ ck5.checked= state.settings.showTips!==false; ck5.onchange=()=>{ state.settings.showTips=ck5.checked; saveSettings(); renderTips(); }; }
-}
-
-// Game options
-function bindGameOptions(){ const box=document.getElementById('gameOptions'); if(!box) return; box.addEventListener('change',(e)=>{ const t=e.target; if(!t || !t.tagName) return; if(t.tagName==='INPUT'){ const id=t.id||''; if(t.name==='x01'){ setGame(Number(t.value)); syncGameOptionsUI(); } else if(id==='doubleOut'){ toggleDoubleOut(t.checked); } else if(id==='soundToggle'){ toggleSound(t.checked); } } }); }
-function syncGameOptionsUI(){ const cur=String(state.startingScore); document.querySelectorAll('input[name="x01"]').forEach(r=>{ r.checked = (r.value===cur); }); const d=document.getElementById('doubleOut'); if(d) d.checked=!!state.doubleOut; const s=document.getElementById('soundToggle'); if(s) s.checked=!!state.soundOn; }
-
-// Utility
-function shuffleArray(arr){ for(let i=arr.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; } }
-function deepClone(o){ try{ return (typeof structuredClone==='function') ? structuredClone(o) : JSON.parse(JSON.stringify(o)); } catch(e){ return JSON.parse(JSON.stringify(o)); } }
-
-function updateUI(){ document.body.classList.toggle('playing', isInProgress()); togglePlayerControls(isInProgress()); updateSticky(); updateTopBar(); renderTips(); }
+/* ===== UI aktualizace ===== */
 function updateTurnInfo(){
-  var el = document.getElementById('turnInfo');
-  var p  = currentPlayer ? currentPlayer() : null;
-  if (!el) return;
-  el.innerHTML = p
-    ? 'Na tahu: <b>'+escapeHtml(p.name)+'</b> • Zbývá: '+p.remaining
-    : 'Na tahu: –';
+  var el=document.getElementById('turnInfo'); var p=currentPlayer(); if(!el) return;
+  el.innerHTML = p ? 'Na tahu: <b>'+escapeHtml(p.name)+'</b> • Zbývá: '+p.remaining : 'Na tahu: –';
 }
-
 function updateSticky(){
-  var el = document.getElementById('stickyBar'); if (!el) return;
-  var p  = currentPlayer ? currentPlayer() : null;
-  var throwsTxt = (p && p.turnThrows && p.turnThrows.length)
-      ? p.turnThrows.map(formatDartShort).join(', ')
-      : '—';
-  el.innerHTML = p
-    ? 'Na tahu: <b>'+escapeHtml(p.name)+'</b> • Zbývá: <b>'+p.remaining+'</b> • Hody: '+throwsTxt
-    : '—';
+  var el=document.getElementById('stickyBar'); if(!el) return;
+  var p=currentPlayer(); var throwsTxt=(p&&p.turnThrows&&p.turnThrows.length)?p.turnThrows.map(formatDartShort).join(', '):'—';
+  el.innerHTML = p ? 'Na tahu: <b>'+escapeHtml(p.name)+'</b> • Zbývá: <b>'+p.remaining+'</b> • Hody: '+throwsTxt : '—';
 }
-
 function updateTopBar(){
-  var top = document.getElementById('activeTop'); if (!top) return;
-  var playing = isInProgress && isInProgress();
-  top.style.display = playing ? 'flex' : 'none';
-  if (!playing) return;
-
-  var p = currentPlayer ? currentPlayer() : null;
-  var tname = document.getElementById('activeTopName');
-  var trem  = document.getElementById('activeTopRemain');
-  var tthr  = document.getElementById('activeTopThrows');
-
-  if (tname) tname.textContent = p ? p.name : '—';
-  if (trem)  trem.textContent  = p ? ('Zbývá: '+p.remaining) : '';
-  if (tthr)  tthr.textContent  = 'Hody: ' + ((p && p.turnThrows && p.turnThrows.length)
-                      ? p.turnThrows.map(formatDartShort).join(', ')
-                      : '—');
+  var top=document.getElementById('activeTop'); if(!top) return;
+  var playing=isInProgress(); top.style.display=playing?'flex':'none'; if(!playing) return;
+  var p=currentPlayer();
+  document.getElementById('activeTopName').textContent = p? p.name : '—';
+  document.getElementById('activeTopRemain').textContent = p? ('Zbývá: '+p.remaining) : '';
+  var throwTxt=(p&&p.turnThrows&&p.turnThrows.length)?p.turnThrows.map(formatDartShort).join(', '):'—';
+  document.getElementById('activeTopThrows').textContent='Hody: '+throwTxt;
 }
-
 function togglePlayerControls(disabled){
-  var inp = document.getElementById('newPlayerName');
-  var btn = document.getElementById('addPlayerBtn');
-  if (inp){ inp.disabled = disabled; inp.placeholder = disabled ? 'Nelze během hry' : 'Jméno hráče'; }
-  if (btn){ btn.disabled = disabled; }
+  var inp=document.getElementById('newPlayerName'); var btn=document.getElementById('addPlayerBtn');
+  if(inp){ inp.disabled=disabled; inp.placeholder=disabled?'Nelze během hry':'Jméno hráče'; }
+  if(btn){ btn.disabled=disabled; }
 }
-
 function updateUI(){
-  var playing = isInProgress && isInProgress();
-  document.body.classList.toggle('playing', !!playing);
-  togglePlayerControls(!!playing);
-  updateSticky();
-  updateTopBar();
-  if (typeof renderTips === 'function') renderTips();
+  var playing=isInProgress();
+  document.body.classList.toggle('playing', playing);
+  togglePlayerControls(playing);
+  updateSticky(); updateTopBar(); renderTips();
 }
 
-// Init
-function buildKeypad(){ const pad=document.getElementById('keypad'); pad.innerHTML=''; const nums=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,25,50]; nums.forEach(n=>{ const b=document.createElement('button'); b.className='key'; b.textContent=n; b.addEventListener('click',()=>enterScore(n)); pad.appendChild(b); }); const miss=document.createElement('button'); miss.className='key miss'; miss.textContent='Miss'; miss.addEventListener('click',()=>enterScore(0,1)); pad.appendChild(miss); }
-// Fallback pro prohlížeče, kde inline onclick neprojde:
+/* ===== Init ===== */
+function buildKeypad(){
+  var pad=document.getElementById('keypad'); pad.innerHTML='';
+  var nums=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,25,50];
+  nums.forEach(function(n){ var b=document.createElement('button'); b.className='key'; b.textContent=n; b.addEventListener('click',function(){ enterScore(n); }); pad.appendChild(b); });
+  var miss=document.createElement('button'); miss.className='key miss'; miss.textContent='Miss'; miss.addEventListener('click',function(){ enterScore(0,1); }); pad.appendChild(miss);
+}
+// Fallback navázání přidání hráče + Enter
 (function bindAddPlayer(){
-  var btn = document.getElementById('addPlayerBtn');
-  var inp = document.getElementById('newPlayerName');
-  if (btn) btn.addEventListener('click', function(e){ e.preventDefault(); addPlayer(); });
-  if (inp) inp.addEventListener('keydown', function(e){ if (e.key==='Enter') addPlayer(); });
+  var btn=document.getElementById('addPlayerBtn');
+  var inp=document.getElementById('newPlayerName');
+  if(btn) btn.addEventListener('click', function(e){ e.preventDefault(); addPlayer(); });
+  if(inp) inp.addEventListener('keydown', function(e){ if(e.key==='Enter') addPlayer(); });
 })();
-function setupMultiplierChips(){ const box=document.getElementById('multiplier'); box.querySelectorAll('.chip').forEach(ch=>{ ch.addEventListener('click',()=>{ box.querySelectorAll('.chip').forEach(c=>c.classList.remove('active')); ch.classList.add('active'); state.multiplier=Number(ch.dataset.mul); saveActive(); }); }); }
-  
-buildKeypad(); setupMultiplierChips(); bindGameOptions(); renderPlayers(); renderLiveHistory(); updateTurnInfo(); applySettings(); bindSettingsUI(); syncGameOptionsUI();
-const saved=loadActive(); if(saved && saved.players && saved.players.length){ state.startingScore=saved.startingScore??state.startingScore; state.doubleOut=!!saved.doubleOut; state.players=saved.players; state.currentIndex=saved.currentIndex||0; state.leg=saved.leg||state.leg; renderPlayers(); renderLiveHistory(); updateTurnInfo(); syncGameOptionsUI(); }
+function setupMultiplierChips(){
+  var box=document.getElementById('multiplier');
+  var chips=box.querySelectorAll('.chip');
+  for(var i=0;i<chips.length;i++){
+    (function(ch){
+      ch.addEventListener('click',function(){
+        for(var j=0;j<chips.length;j++) chips[j].classList.remove('active');
+        ch.classList.add('active'); state.multiplier=Number(ch.getAttribute('data-mul')); saveActive();
+      });
+    })(chips[i]);
+  }
+}
+
+buildKeypad(); setupMultiplierChips(); bindGameOptions(); renderPlayers(); renderLiveHistory(); updateTurnInfo(); renderTips();
+applySettings(); bindSettingsUI(); syncGameOptionsUI();
+
+var saved=loadActive();
+if(saved && saved.players && saved.players.length){
+  state.startingScore = (saved.startingScore!=null ? saved.startingScore : state.startingScore);
+  state.doubleOut    = !!saved.doubleOut;
+  state.players      = saved.players;
+  state.currentIndex = saved.currentIndex || 0;
+  state.leg          = saved.leg || state.leg;
+  state.soundOn      = (saved.soundOn!==false);
+  renderPlayers(); renderLiveHistory(); updateTurnInfo(); syncGameOptionsUI();
+}
 updateUI();
+
+/* Export handlerů pro inline onclick */
 window.addPlayer       = addPlayer;
 window.startGameRandom = startGameRandom;
 window.startNewLeg     = startNewLeg;
@@ -600,13 +671,9 @@ window.abortLeg        = abortLeg;
 window.undoLastDart    = undoLastDart;
 window.enterScore      = enterScore;
 window.finishTurn      = finishTurn;
-function togglePlayerControls(disabled){
-  var inp = document.getElementById('newPlayerName');
-  var btn = document.getElementById('addPlayerBtn');
-  if (inp) { inp.disabled = disabled; inp.placeholder = disabled ? 'Nelze během hry' : 'Jméno hráče'; }
-  if (btn) { btn.disabled = disabled; }
-}
-
+window.downloadHistory = downloadHistory;
+window.importHistory   = importHistory;
+window.clearAll        = clearAll;
 </script>
 </body>
 </html>

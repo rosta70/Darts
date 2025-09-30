@@ -1,55 +1,57 @@
 /*
   Service Worker pro Šipky – zapis skóre
-  - jednoduché cache-first pro statická aktiva
-  - fallback na síť a offline odpověď pro root
+  - cache-first pro statická aktiva, síť s doplněním do cache pro ostatní
+  - okamžitá aktivace nové verze (SKIP_WAITING)
 */
 
-const CACHE = 'darts-cache-v1';
+const CACHE_VERSION = 'darts-cache-v2';
 const ASSETS = [
   './',
   './index.html',
-  './manifest.webmanifest'
-  // Přidej i ikony, až je do repa nahraješ:
-  // './icons/icon-192.png',
-  // './icons/icon-512.png',
-  // './icons/maskable-192.png',
-  // './icons/maskable-512.png'
+  './manifest.webmanifest',
+  // Ikony (pokud jsou v /icons/):
+  './icons/icon-192.png',
+  './icons/icon-512.png',
+  './icons/maskable-192.png',
+  './icons/maskable-512.png'
 ];
 
 self.addEventListener('install', (event) => {
   self.skipWaiting();
-  event.waitUntil(
-    caches.open(CACHE).then(cache => cache.addAll(ASSETS))
-  );
+  event.waitUntil(caches.open(CACHE_VERSION).then(cache => cache.addAll(ASSETS)));
 });
 
 self.addEventListener('activate', (event) => {
-  event.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(keys.map(k => (k !== CACHE ? caches.delete(k) : null)))
-    )
-  );
-  self.clients.claim();
+  event.waitUntil((async () => {
+    const keys = await caches.keys();
+    await Promise.all(keys.map(k => (k !== CACHE_VERSION ? caches.delete(k) : null)));
+    await self.clients.claim();
+  })());
+});
+
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
 });
 
 self.addEventListener('fetch', (event) => {
   const req = event.request;
-  if (req.method !== 'GET') return; // jen GET
+  if (req.method !== 'GET') return;
 
   event.respondWith((async () => {
     const url = new URL(req.url);
 
-    // Cache-first pro vlastní statiky
+    // Naše statická aktiva – cache-first
     if (url.origin === location.origin) {
-      const cached = await caches.match(req);
-      if (cached) return cached;
+      const inCache = await caches.match(req);
+      if (inCache) return inCache;
     }
 
     try {
       const fresh = await fetch(req);
-      // Ulož jen úspěšné odpovědi
       if (fresh && fresh.status === 200 && fresh.type === 'basic') {
-        const cache = await caches.open(CACHE);
+        const cache = await caches.open(CACHE_VERSION);
         cache.put(req, fresh.clone());
       }
       return fresh;

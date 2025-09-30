@@ -438,6 +438,7 @@ function enterScore(base,mul){
   state.multiplier=1; var chips=document.querySelectorAll('#multiplier .chip'); for(var i=0;i<chips.length;i++) chips[i].classList.remove('active'); var sbtn=document.querySelector('#multiplier .chip[data-mul="1"]'); if(sbtn) sbtn.classList.add('active');
   updateUI(); saveActive();
 }
+function deepClone(o){ try{return JSON.parse(JSON.stringify(o));}catch(e){return o;} }
 function finishTurn(){
   var p=currentPlayer(); if(!p) return;
   var darts=p.turnThrows||[]; if(darts.length===0){ nextPlayer(); renderPlayers(); saveActive(); return; }
@@ -501,6 +502,61 @@ function renderTips(){
   var strings=tips.map(function(arr){return arr.join(' → ');});
   box.textContent = 'Tipy: '+strings.join(' | ');
   if(tipPill){ tipPill.textContent = strings[0]; tipPill.style.display='inline-block'; }
+}
+
+/* ====== Game options (x01, double-out, čtení) ====== */
+function bindGameOptions(){
+  var box = document.getElementById('gameOptions');
+  if(!box) return;
+  box.addEventListener('change', function(e){
+    var t = e.target;
+    if(!t) return;
+    if(t.name === 'x01'){
+      setGame(Number(t.value));
+      syncGameOptionsUI();
+    } else if (t.id === 'doubleOut'){
+      toggleDoubleOut(t.checked);
+    } else if (t.id === 'soundToggle'){
+      toggleSound(t.checked);
+    }
+  });
+  syncGameOptionsUI();
+}
+function syncGameOptionsUI(){
+  var cur = String(state.startingScore);
+  var radios = document.querySelectorAll('input[name="x01"]');
+  for (var i=0;i<radios.length;i++){ radios[i].checked = (radios[i].value===cur); }
+  var d = document.getElementById('doubleOut'); if(d) d.checked = !!state.doubleOut;
+  var s = document.getElementById('soundToggle'); if(s) s.checked = !!state.soundOn;
+}
+
+/* ====== Nastavení (téma, barvy, minimal UI, sticky panel, tipy) ====== */
+var THEME_CLASSES=['theme-dark','theme-light','theme-contrast','theme-light-blue','theme-light-mint','theme-light-rose','theme-light-sand'];
+function applySettings(){
+  var b=document.body, theme = state.settings && state.settings.theme ? state.settings.theme : 'theme-dark';
+  for(var i=0;i<THEME_CLASSES.length;i++) b.classList.remove(THEME_CLASSES[i]);
+  b.classList.add(theme);
+  b.classList.toggle('color-keys', !!(state.settings && state.settings.colorizeKeys));
+  b.classList.toggle('minimal',   !!(state.settings && state.settings.minimalUi));
+  b.classList.toggle('sticky-info',!!(state.settings && state.settings.stickyBar));
+}
+function bindSettingsUI(){
+  var themeSel = document.getElementById('themeSelect');
+  if(themeSel){
+    themeSel.value = (state.settings && state.settings.theme) || 'theme-dark';
+    themeSel.onchange = function(){ state.settings.theme = themeSel.value; saveSettings(); applySettings(); };
+  }
+  var ck = document.getElementById('colorizeKeys');
+  if(ck){ ck.checked = !!(state.settings && state.settings.colorizeKeys); ck.onchange=function(){ state.settings.colorizeKeys=ck.checked; saveSettings(); applySettings(); }; }
+  var mu = document.getElementById('minimalUi');
+  if(mu){ mu.checked = !!(state.settings && state.settings.minimalUi); mu.onchange=function(){ state.settings.minimalUi=mu.checked; saveSettings(); applySettings(); }; }
+  var sb = document.getElementById('stickyBarToggle');
+  if(sb){ sb.checked = !!(state.settings && state.settings.stickyBar); sb.onchange=function(){ state.settings.stickyBar=sb.checked; saveSettings(); applySettings(); }; }
+  var st = document.getElementById('showTips');
+  if(st){
+    st.checked = (state.settings && (typeof state.settings.showTips!=='undefined')) ? !!state.settings.showTips : true;
+    st.onchange = function(){ state.settings.showTips = st.checked; saveSettings(); if(typeof renderTips==='function') renderTips(); };
+  }
 }
 
 /* ===== Renderování ===== */

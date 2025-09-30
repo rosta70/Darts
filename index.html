@@ -121,6 +121,57 @@ body.theme-light button{border-color:#cfd6f1;color:#0f1230}
 body.theme-light button.primary{background:linear-gradient(180deg,#f0f4ff,#e3e9ff);border-color:#b9d1ff;color:#0f1230}
 body.theme-light button.warn{background:#fff4d6;border-color:#e8c66a;color:#5a3b00}
 body.theme-light button.danger{background:#ffe5e5;border-color:#f5a3a3;color:#7a1a1a}
+/* === Světlé téma – opravy viditelnosti hráčů === */
+/* Zajistíme kontrast pro všechny světlé varianty */
+body.theme-light .col,
+body.theme-light-blue .col,
+body.theme-light-mint .col,
+body.theme-light-rose .col,
+body.theme-light-sand .col,
+body.theme-contrast .col{ background:#ffffff; border-color:var(--border); }
+
+body.theme-light .players,
+body.theme-light-blue .players,
+body.theme-light-mint .players,
+body.theme-light-rose .players,
+body.theme-light-sand .players,
+body.theme-contrast .players{ background:#ffffff; }
+
+body.theme-light .player,
+body.theme-light-blue .player,
+body.theme-light-mint .player,
+body.theme-light-rose .player,
+body.theme-light-sand .player,
+body.theme-contrast .player{ background:#ffffff; border-color:#cfd6f1; color:#0f1230; }
+
+body.theme-light .player .name,
+body.theme-light .player .score,
+body.theme-light-blue .player .name,
+body.theme-light-blue .player .score,
+body.theme-light-mint .player .name,
+body.theme-light-mint .player .score,
+body.theme-light-rose .player .name,
+body.theme-light-rose .player .score,
+body.theme-light-sand .player .name,
+body.theme-light-sand .player .score,
+body.theme-contrast .player .name,
+body.theme-contrast .player .score{ color:#0f1230; }
+
+body.theme-light .pill,
+body.theme-light-blue .pill,
+body.theme-light-mint .pill,
+body.theme-light-rose .pill,
+body.theme-light-sand .pill,
+body.theme-contrast .pill{ background:#eef3ff; color:#2b345a; border-color:#cfd6f1; }
+
+/* Tlačítka uvnitř světlých témat */
+body.theme-light button,
+body.theme-light-blue button,
+body.theme-light-mint button,
+body.theme-light-rose button,
+body.theme-light-sand button,
+body.theme-contrast button{ color:#0f1230; border-color:#cfd6f1; }
+
 </style>
 </head>
 <body class="theme-dark color-keys sticky-info minimal">

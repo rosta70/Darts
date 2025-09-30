@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>Šipky – zapis skóre</title>
   <meta name="theme-color" content="#0b0e1a" />
-  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="manifest" href="./manifest.webmanifest" />
   <style>
     :root{
       --bg1:#0b0e1a; --bg2:#12152a; --fg:#e8ebf8; --muted:#aeb3c7;
@@ -312,6 +312,11 @@
         <button class="primary" id="updateBtn">Aktualizovat aplikaci</button>
         <span class="small muted">Vyčistí cache i Service Worker a načte poslední verzi z GitHubu.</span>
       </div>
+      <h3>Reset</h3>
+      <div class="chips">
+        <button class="danger" id="resetAppBtn" type="button">Reset aplikace</button>
+        <span class="small muted">Vymaže rozpracovanou hru a obnoví stránku.</span>
+      </div>
 
       <p class="small muted">Čtení hodnot je řešeno <b>TTS</b> (čeština). Soubory MP3 jsou vypnuté kvůli konfliktům.</p>
     </div>
@@ -321,27 +326,55 @@
 <div class="stickybar" id="stickyBar">—</div>
 
 <script>
-/* ===== PWA (install) ===== */
-if ('serviceWorker' in navigator) {
+/* ===== PWA (install) – robustní registrace a instalace ===== */
+(function registerSW(){
+  if (!('serviceWorker' in navigator)) return;
   window.addEventListener('load', function(){
-    navigator.serviceWorker.register('./sw.js').catch(function(){});
+    const swUrl = new URL('sw.js', location.href).pathname;   // vždy z kořene aktuální cesty
+    const scope = new URL('./', location.href).pathname;
+    navigator.serviceWorker.register(swUrl, { scope }).catch(function(){});
+  });
+})();
+
+let deferredPrompt = null;
+function showInstallButtons(show){
+  ['installBtn','installBtnHeader','installBtnSettings'].forEach(function(id){
+    const b = document.getElementById(id);
+    if (b) b.style.display = show ? 'inline-block' : 'none';
   });
 }
-var deferredPrompt=null;
 window.addEventListener('beforeinstallprompt', function(e){
-  e.preventDefault(); deferredPrompt=e;
-  ['installBtn','installBtnHeader','installBtnSettings'].forEach(function(id){ var b=document.getElementById(id); if(b) b.style.display='inline-block'; });
+  e.preventDefault();
+  deferredPrompt = e;
+  showInstallButtons(true);
 });
 window.addEventListener('appinstalled', function(){
-  deferredPrompt=null;
-  ['installBtn','installBtnHeader','installBtnSettings'].forEach(function(id){ var b=document.getElementById(id); if(b) b.style.display='none'; });
+  deferredPrompt = null;
+  showInstallButtons(false);
 });
-function doInstall(){ if(!deferredPrompt){ alert('Instalace zatím není k dispozici.'); return; } deferredPrompt.prompt(); deferredPrompt.userChoice.then(function(){ deferredPrompt=null; }); }
-['installBtn','installBtnHeader','installBtnSettings'].forEach(function(id){ var b=document.getElementById(id); if(b) b.addEventListener('click', doInstall); });
+function manualInstallHint(){
+  alert(
+`Instalace:
+• Chrome/Edge (desktop): menu ⋮ → Aplikace / Nainstalovat tuto stránku.
+• Android (Chrome/Samsung): menu ⋮ → Přidat na plochu / Instalovat.
+• iOS (Safari): Sdílet ▸ Přidat na plochu.
+
+Pozn.: v režimu Inkognito/InPrivate instalace nefunguje.`
+  );
+}
+async function doInstall(){
+  if (!deferredPrompt) { manualInstallHint(); return; }
+  deferredPrompt.prompt();
+  try { await deferredPrompt.userChoice; } catch(e){}
+  deferredPrompt = null; // event lze použít jen jednou
+}
+['installBtn','installBtnHeader','installBtnSettings'].forEach(function(id){
+  const b = document.getElementById(id);
+  if (b) b.addEventListener('click', doInstall);
+});
 
 /* ===== TTS – pouze syntéza (bez MP3), preferuj češtinu ===== */
 var voices = [];
-
 function populateVoiceSelect(){
   var sel = document.getElementById('ttsVoice'); if(!sel) return;
   var cur = (state.settings && state.settings.ttsVoice) ? state.settings.ttsVoice : 'auto';
@@ -356,12 +389,10 @@ function populateVoiceSelect(){
   });
   sel.value = cur;
 }
-
 function refreshVoices(){
   try{ voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : []; }catch(e){ voices = []; }
   populateVoiceSelect();
 }
-
 function preferredVoice(){
   var list = voices || [];
   var sel = (state.settings && state.settings.ttsVoice) ? state.settings.ttsVoice : 'auto';
@@ -375,7 +406,6 @@ function preferredVoice(){
   }
   return by('cs') || by('sk') || by('pl') || list[0] || null;
 }
-
 function speakText(t){
   if(!state.soundOn) return;
   if(!('speechSynthesis' in window)) return;
@@ -383,33 +413,25 @@ function speakText(t){
     var u = new SpeechSynthesisUtterance(String(t));
     var v = preferredVoice();
     if(v) u.voice = v;
-
-    // Vynucený jazyk – pomáhá Samsung Internetu přestat číst anglicky
-    u.lang = 'cs-CZ';
-
+    u.lang   = 'cs-CZ'; // vynucení češtiny (pomáhá Samsung Internetu)
     u.rate   = (state.settings && state.settings.ttsRate   != null) ? state.settings.ttsRate   : 1;
     u.volume = (state.settings && state.settings.ttsVolume != null) ? state.settings.ttsVolume : 1;
     u.pitch  = (state.settings && state.settings.ttsPitch  != null) ? state.settings.ttsPitch  : 1;
-
     try{ window.speechSynthesis.cancel(); }catch(e){}
     window.speechSynthesis.speak(u);
   }catch(e){}
 }
-
 function playNumber(n){ speakText(n); }
 function playWord(w){
   if(w==='bust'  && state.settings && state.settings.ttsSpeakBust===false) return;
   if(w==='vyhra' && state.settings && state.settings.ttsSpeakWin===false)  return;
   speakText(w==='vyhra' ? 'Výhra' : 'Bust');
 }
-
-// inicializace seznamu hlasů
 if('speechSynthesis' in window){
   refreshVoices();
   if('onvoiceschanged' in window.speechSynthesis){
     window.speechSynthesis.onvoiceschanged = refreshVoices;
   }
-  // Některé prohlížeče (Samsung) načítají hlasy opožděně – znovu po zviditelnění
   document.addEventListener('visibilitychange', function(){
     if(document.visibilityState==='visible') refreshVoices();
   });
@@ -438,13 +460,8 @@ function loadSettings(){
       minimalUi:true,
       stickyBar:true,
       showTips:true,
-      // TTS defaulty:
-      ttsRate:1,
-      ttsVolume:1,
-      ttsPitch:1,
-      ttsVoice:'auto',
-      ttsSpeakBust:true,
-      ttsSpeakWin:true
+      ttsRate:1, ttsVolume:1, ttsPitch:1, ttsVoice:'auto',
+      ttsSpeakBust:true, ttsSpeakWin:true
     };
   }catch(e){
     return { theme:'theme-dark', colorizeKeys:true, minimalUi:true, stickyBar:true, showTips:true,
@@ -823,7 +840,7 @@ function buildKeypad(){
   nums.forEach(function(n){ var b=document.createElement('button'); b.className='key'; b.textContent=n; b.addEventListener('click',function(){ enterScore(n); }); pad.appendChild(b); });
   var miss=document.createElement('button'); miss.className='key miss'; miss.textContent='Miss'; miss.addEventListener('click',function(){ enterScore(0,1); }); pad.appendChild(miss);
 }
-// Fallback navázání přidání hráče + Enter
+// Přidání hráče + Enter
 (function bindAddPlayer(){
   var btn=document.getElementById('addPlayerBtn');
   var inp=document.getElementById('newPlayerName');
@@ -843,7 +860,7 @@ function setupMultiplierChips(){
   }
 }
 
-/* === Aktualizační tlačítko – vyčištění SW + cache a reload === */
+/* === Aktualizační a reset tlačítka === */
 async function updateApp(){
   try{
     if('serviceWorker' in navigator){
@@ -862,6 +879,13 @@ async function updateApp(){
     location.replace(location.pathname + '?v=' + Date.now());
   }
 }
+var _ub = document.getElementById('updateBtn');
+if (_ub) _ub.addEventListener('click', updateApp);
+var _rb = document.getElementById('resetAppBtn');
+if (_rb) _rb.addEventListener('click', function(){
+  try { localStorage.removeItem('dartsActiveV1'); } catch(e){}
+  location.reload();
+});
 
 buildKeypad(); setupMultiplierChips(); bindGameOptions(); renderPlayers(); renderLiveHistory(); updateTurnInfo(); renderTips();
 applySettings(); bindSettingsUI(); syncGameOptionsUI();
@@ -889,10 +913,6 @@ window.finishTurn      = finishTurn;
 window.downloadHistory = downloadHistory;
 window.importHistory   = importHistory;
 window.clearAll        = clearAll;
-
-/* navázání na tlačítko „Aktualizovat“ */
-var _ub = document.getElementById('updateBtn');
-if (_ub) _ub.addEventListener('click', updateApp);
 </script>
 </body>
 </html>

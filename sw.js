@@ -1,15 +1,21 @@
 /*
   Service Worker pro Šipky – zapis skóre
   - cache-first pro statická aktiva, síť s doplněním do cache pro ostatní
+  - tolerantní instalace (ikony jsou volitelné)
   - okamžitá aktivace nové verze (SKIP_WAITING)
 */
 
-const CACHE_VERSION = 'darts-cache-v3';
-const ASSETS = [
+const CACHE_VERSION = 'darts-cache-v5';
+
+// Povinné soubory – MUSÍ existovat
+const CORE_ASSETS = [
   './',
   './index.html',
-  './manifest.webmanifest',
-  // Ikony (pokud jsou v /icons/):
+  './manifest.webmanifest'
+];
+
+// Volitelné (kešujeme, jen pokud existují)
+const OPTIONAL_ASSETS = [
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/maskable-192.png',
@@ -17,8 +23,14 @@ const ASSETS = [
 ];
 
 self.addEventListener('install', (event) => {
-  self.skipWaiting();
-  event.waitUntil(caches.open(CACHE_VERSION).then(cache => cache.addAll(ASSETS)));
+  event.waitUntil((async () => {
+    self.skipWaiting();
+    const cache = await caches.open(CACHE_VERSION);
+    await cache.addAll(CORE_ASSETS); // povinné
+    await Promise.all(OPTIONAL_ASSETS.map(async (url) => { // volitelné
+      try { await cache.add(url); } catch(_) { /* ignore missing */ }
+    }));
+  })());
 });
 
 self.addEventListener('activate', (event) => {
@@ -30,9 +42,7 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('message', (event) => {
-  if (event.data && event.data.type === 'SKIP_WAITING') {
-    self.skipWaiting();
-  }
+  if (event.data && event.data.type === 'SKIP_WAITING') self.skipWaiting();
 });
 
 self.addEventListener('fetch', (event) => {
@@ -56,10 +66,7 @@ self.addEventListener('fetch', (event) => {
       }
       return fresh;
     } catch (err) {
-      // Offline fallback pro navigaci
-      if (req.mode === 'navigate') {
-        return caches.match('./index.html');
-      }
+      if (req.mode === 'navigate') return caches.match('./index.html');
       return new Response('Offline', { status: 503, statusText: 'Offline' });
     }
   })());

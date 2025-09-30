@@ -691,23 +691,30 @@ function formatDartShort(d){ var m=d.mul===1?'S':(d.mul===2?'D':'T'); return m+'
 function escapeHtml(s){ s=(s+""); return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
 function renderPlayers(){
-  var box=document.getElementById('players'); if(!box) return;
-  box.innerHTML='';
-  for(var i=0;i<state.players.length;i++){
+  var box = document.getElementById('players'); if(!box) return;
+  box.innerHTML = '';
+  for (var i = 0; i < state.players.length; i++){
     (function(i){
-      var p=state.players[i];
-      var throwsTxt=(p.turnThrows&&p.turnThrows.length)?' ['+p.turnThrows.map(formatDartShort).join(', ')+']':'';
-      var row=document.createElement('div'); row.className='player'; row.setAttribute('data-id',p.id);
+      var p = state.players[i];
+      var throwsTxt = (p.turnThrows && p.turnThrows.length)
+          ? ' [' + p.turnThrows.map(formatDartShort).join(', ') + ']'
+          : '';
+      var row = document.createElement('div'); row.className='player'; row.setAttribute('data-id', p.id);
 
-      var left=document.createElement('div'); left.style.display='flex'; left.style.alignItems='center'; left.style.gap='8px';
-      var pill=document.createElement('div'); pill.className='pill'; if(i===state.currentIndex) pill.style.outline='2px solid var(--accent)'; pill.textContent=(i===state.currentIndex?'▶️ ':'')+(i+1);
-      var name=document.createElement('div'); name.className='name'; name.textContent=p.name+(throwsTxt?' '+throwsTxt:'');
+      var left = document.createElement('div'); left.style.display='flex'; left.style.alignItems='center'; left.style.gap='8px';
+      var pill = document.createElement('div'); pill.className='pill';
+      if(i === state.currentIndex) pill.style.outline='2px solid var(--accent)';
+      pill.textContent = (i===state.currentIndex ? '▶️ ' : '') + (i+1);
+      var name = document.createElement('div'); name.className='name'; name.textContent = p.name + (throwsTxt ? ' ' + throwsTxt : '');
       left.appendChild(pill); left.appendChild(name);
 
-      var right=document.createElement('div'); right.style.display='flex'; right.style.alignItems='center'; right.style.gap='8px';
-      var score=document.createElement('div'); score.className='score'; score.textContent=p.remaining;
-      var remove=document.createElement('button'); remove.className='ghost'; remove.title='Odebrat'; remove.textContent='✖';
-      remove.addEventListener('click',(function(id){return function(){ removePlayer(id); };})(p.id));
+      var right = document.createElement('div'); right.style.display='flex'; right.style.alignItems='center'; right.style.gap='8px';
+      var score = document.createElement('div'); score.className='score';
+      // 🔴 Aktuální hráč: zobrazuj PROJEKTOVANÝ zůstatek (po započtení právě zadaných hodů)
+      score.textContent = (i===state.currentIndex) ? getProjectedRemaining(p) : p.remaining;
+
+      var remove = document.createElement('button'); remove.className='ghost'; remove.title='Odebrat'; remove.textContent='✖';
+      remove.addEventListener('click', (function(id){ return function(){ removePlayer(id); }; })(p.id));
       right.appendChild(score); right.appendChild(remove);
 
       row.appendChild(left); row.appendChild(right);
@@ -716,6 +723,7 @@ function renderPlayers(){
   }
   updateTurnInfo(); updateSticky(); updateTopBar(); renderTips();
 }
+
 function renderLiveHistory(){
   var box=document.getElementById('liveHistory'); if(!box) return;
   box.innerHTML='';
@@ -774,22 +782,42 @@ function clearAll(){ if(!confirm('Opravdu smazat veškerou historii?')) return; 
 
 /* ===== UI aktualizace ===== */
 function updateTurnInfo(){
-  var el=document.getElementById('turnInfo'); var p=currentPlayer(); if(!el) return;
-  el.innerHTML = p ? 'Na tahu: <b>'+escapeHtml(p.name)+'</b> • Zbývá: '+p.remaining : 'Na tahu: –';
+  var el = document.getElementById('turnInfo');
+  var p  = currentPlayer();
+  if(!el){ return; }
+  if(!p){ el.innerHTML = 'Na tahu: –'; return; }
+  var proj = getProjectedRemaining(p);
+  el.innerHTML = 'Na tahu: <b>'+escapeHtml(p.name)+'</b> • Zbývá: '+proj;
 }
+
 function updateSticky(){
-  var el=document.getElementById('stickyBar'); if(!el) return;
-  var p=currentPlayer(); var throwsTxt=(p&&p.turnThrows&&p.turnThrows.length)?p.turnThrows.map(formatDartShort).join(', '):'—';
-  el.innerHTML = p ? 'Na tahu: <b>'+escapeHtml(p.name)+'</b> • Zbývá: <b>'+p.remaining+'</b> • Hody: '+throwsTxt : '—';
+  var el = document.getElementById('stickyBar');
+  if(!el) return;
+  var p = currentPlayer();
+  if(!p){ el.innerHTML = '—'; return; }
+  var proj = getProjectedRemaining(p);
+  var throwsTxt = (p.turnThrows && p.turnThrows.length)
+      ? p.turnThrows.map(formatDartShort).join(', ')
+      : '—';
+  el.innerHTML = 'Na tahu: <b>'+escapeHtml(p.name)+'</b> • Zbývá: <b>'+proj+'</b> • Hody: '+throwsTxt;
 }
+
 function updateTopBar(){
-  var top=document.getElementById('activeTop'); if(!top) return;
-  var playing=isInProgress(); top.style.display=playing?'flex':'none'; if(!playing) return;
-  var p=currentPlayer();
-  document.getElementById('activeTopName').textContent = p? p.name : '—';
-  document.getElementById('activeTopRemain').textContent = p? ('Zbývá: '+p.remaining) : '';
-  var throwTxt=(p&&p.turnThrows&&p.turnThrows.length)?p.turnThrows.map(formatDartShort).join(', '):'—';
-  document.getElementById('activeTopThrows').textContent='Hody: '+throwTxt;
+  var top = document.getElementById('activeTop');
+  if(!top) return;
+  var playing = isInProgress();
+  top.style.display = playing ? 'flex' : 'none';
+  if(!playing) return;
+
+  var p = currentPlayer();
+  var proj = p ? getProjectedRemaining(p) : null;
+
+  document.getElementById('activeTopName').textContent   = p ? p.name : '—';
+  document.getElementById('activeTopRemain').textContent = p ? ('Zbývá: '+proj) : '';
+  var throwTxt = (p && p.turnThrows && p.turnThrows.length)
+      ? p.turnThrows.map(formatDartShort).join(', ')
+      : '—';
+  document.getElementById('activeTopThrows').textContent = 'Hody: ' + throwTxt;
 }
 function togglePlayerControls(disabled){
   var inp=document.getElementById('newPlayerName'); var btn=document.getElementById('addPlayerBtn');

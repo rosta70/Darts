@@ -281,11 +281,20 @@
         <label><input type="checkbox" id="stickyBarToggle" checked/> Pevný panel skóre dole</label>
         <label><input type="checkbox" id="showTips" checked/> Zobrazovat checkout tipy</label>
       </div>
+
       <h3>Instalace jako aplikace</h3>
       <div class="chips">
         <button class="primary" id="installBtnSettings" style="display:none">Nainstalovat</button>
         <span class="small muted">Tlačítko se zobrazí, jakmile prohlížeč umožní instalaci (PWA).</span>
       </div>
+
+      <!-- NOVÉ: tlačítko pro vynucení aktualizace -->
+      <h3>Aktualizace</h3>
+      <div class="chips">
+        <button class="primary" id="updateBtn">Aktualizovat aplikaci</button>
+        <span class="small muted">Vyčistí cache i Service Worker a načte poslední verzi z GitHubu.</span>
+      </div>
+
       <p class="small muted">Čtení hodnot je řešeno <b>TTS</b> (česky). Soubory MP3 se nepoužívají, aby nedocházelo ke konfliktu.</p>
     </div>
   </section>
@@ -404,7 +413,6 @@ function startGameRandom(){
     if(!confirm('Hra je rozjetá. Ukončit a začít novou s náhodným pořadím?')) return;
     state.history.legs.push(Object.assign({}, state.leg, {aborted:true})); saveHistory();
   }
-  // zamíchat pořadí (Fisher–Yates)
   for(var i=state.players.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var tmp=state.players[i]; state.players[i]=state.players[j]; state.players[j]=tmp; }
   state.players.forEach(function(p){ p.remaining=state.startingScore; p.turnThrows=[]; });
   state.currentIndex=0;
@@ -704,6 +712,26 @@ function setupMultiplierChips(){
   }
 }
 
+/* === Aktualizační tlačítko – vyčištění SW + cache a reload === */
+async function updateApp(){
+  try{
+    if('serviceWorker' in navigator){
+      const regs = await navigator.serviceWorker.getRegistrations();
+      for(const reg of regs){
+        try{ await reg.update(); }catch(e){}
+        if(reg.waiting) reg.waiting.postMessage({type:'SKIP_WAITING'});
+        try{ await reg.unregister(); }catch(e){}
+      }
+    }
+    if('caches' in window){
+      const keys = await caches.keys();
+      await Promise.all(keys.map(k => caches.delete(k)));
+    }
+  } finally {
+    location.replace(location.pathname + '?v=' + Date.now());
+  }
+}
+
 buildKeypad(); setupMultiplierChips(); bindGameOptions(); renderPlayers(); renderLiveHistory(); updateTurnInfo(); renderTips();
 applySettings(); bindSettingsUI(); syncGameOptionsUI();
 
@@ -730,6 +758,10 @@ window.finishTurn      = finishTurn;
 window.downloadHistory = downloadHistory;
 window.importHistory   = importHistory;
 window.clearAll        = clearAll;
+
+/* navázání na tlačítko „Aktualizovat“ */
+var _ub = document.getElementById('updateBtn');
+if (_ub) _ub.addEventListener('click', updateApp);
 </script>
 </body>
 </html>

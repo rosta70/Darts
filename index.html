@@ -39,7 +39,7 @@
     .side{flex:0 1 320px}
 
     .controls{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
-    select, input[type=text], button{background:#0e1121;color:var(--fg);border:1px solid var(--border);border-radius:12px;padding:10px 12px;font:inherit}
+    select, input[type=text], input[type=range], button{background:#0e1121;color:var(--fg);border:1px solid var(--border);border-radius:12px;padding:10px 12px;font:inherit}
     body.theme-light select, body.theme-light input, body.theme-light button{background:#fff}
     button{cursor:pointer;transition:transform .05s ease}
     button:hover{transform:translateY(-1px)}
@@ -288,14 +288,32 @@
         <span class="small muted">Tlačítko se zobrazí, jakmile prohlížeč umožní instalaci (PWA).</span>
       </div>
 
-      <!-- NOVÉ: tlačítko pro vynucení aktualizace -->
+      <h3>TTS (čtení hodnot)</h3>
+      <div class="controls" style="grid-template-columns:repeat(2,minmax(0,1fr));max-width:820px">
+        <label>Hlas
+          <select id="ttsVoice"></select>
+        </label>
+        <label>Rychlost
+          <input id="ttsRate" type="range" min="0.6" max="1.4" step="0.1">
+        </label>
+        <label>Hlasitost
+          <input id="ttsVolume" type="range" min="0" max="1" step="0.05">
+        </label>
+        <label>Výška hlasu
+          <input id="ttsPitch" type="range" min="0.6" max="1.4" step="0.1">
+        </label>
+        <label><input type="checkbox" id="ttsSpeakBust" checked> Číst „BUST“</label>
+        <label><input type="checkbox" id="ttsSpeakWin" checked> Číst „Výhra“</label>
+        <button class="ghost" id="ttsTestBtn" type="button">Test: 60</button>
+      </div>
+
       <h3>Aktualizace</h3>
       <div class="chips">
         <button class="primary" id="updateBtn">Aktualizovat aplikaci</button>
         <span class="small muted">Vyčistí cache i Service Worker a načte poslední verzi z GitHubu.</span>
       </div>
 
-      <p class="small muted">Čtení hodnot je řešeno <b>TTS</b> (česky). Soubory MP3 se nepoužívají, aby nedocházelo ke konfliktu.</p>
+      <p class="small muted">Čtení hodnot je řešeno <b>TTS</b> (čeština). Soubory MP3 jsou vypnuté kvůli konfliktům.</p>
     </div>
   </section>
 </div>
@@ -321,14 +339,81 @@ window.addEventListener('appinstalled', function(){
 function doInstall(){ if(!deferredPrompt){ alert('Instalace zatím není k dispozici.'); return; } deferredPrompt.prompt(); deferredPrompt.userChoice.then(function(){ deferredPrompt=null; }); }
 ['installBtn','installBtnHeader','installBtnSettings'].forEach(function(id){ var b=document.getElementById(id); if(b) b.addEventListener('click', doInstall); });
 
-/* ===== TTS – pouze syntéza (bez MP3) ===== */
-var voices=[];
-function loadVoices(){ try{ voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : []; }catch(e){ voices=[]; } }
-if('speechSynthesis' in window){ loadVoices(); if('onvoiceschanged' in window.speechSynthesis){ window.speechSynthesis.onvoiceschanged = loadVoices; } }
-function pickCzechVoice(){ if(!voices.length) return null; function by(c){ return voices.find(function(v){ return v.lang && v.lang.toLowerCase().indexOf(c)===0; }); } return by('cs')||by('sk')||by('pl')||voices[0]; }
-function speakText(t){ if(!state.soundOn) return; if(!('speechSynthesis' in window)) return; try{ var u=new SpeechSynthesisUtterance(String(t)); var v=pickCzechVoice(); if(v) u.voice=v; u.rate=1; u.pitch=1; u.volume=1; try{ window.speechSynthesis.cancel(); }catch(e){} window.speechSynthesis.speak(u);}catch(e){} }
+/* ===== TTS – pouze syntéza (bez MP3), preferuj češtinu ===== */
+var voices = [];
+
+function populateVoiceSelect(){
+  var sel = document.getElementById('ttsVoice'); if(!sel) return;
+  var cur = (state.settings && state.settings.ttsVoice) ? state.settings.ttsVoice : 'auto';
+  sel.innerHTML = '';
+  var optAuto = document.createElement('option');
+  optAuto.value='auto'; optAuto.textContent='Automaticky (preferuj češtinu)';
+  sel.appendChild(optAuto);
+  (voices||[]).forEach(function(v){
+    var o=document.createElement('option');
+    o.value=v.name; o.textContent=v.name + (v.lang?' ('+v.lang+')':'');
+    sel.appendChild(o);
+  });
+  sel.value = cur;
+}
+
+function refreshVoices(){
+  try{ voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : []; }catch(e){ voices = []; }
+  populateVoiceSelect();
+}
+
+function preferredVoice(){
+  var list = voices || [];
+  var sel = (state.settings && state.settings.ttsVoice) ? state.settings.ttsVoice : 'auto';
+  if(sel && sel !== 'auto'){
+    var v = list.find(function(x){ return x && (x.name===sel || x.voiceURI===sel); });
+    if(v) return v;
+  }
+  function by(prefix){
+    var p = prefix.toLowerCase();
+    return list.find(function(v){ return v && v.lang && v.lang.toLowerCase().indexOf(p)===0; });
+  }
+  return by('cs') || by('sk') || by('pl') || list[0] || null;
+}
+
+function speakText(t){
+  if(!state.soundOn) return;
+  if(!('speechSynthesis' in window)) return;
+  try{
+    var u = new SpeechSynthesisUtterance(String(t));
+    var v = preferredVoice();
+    if(v) u.voice = v;
+
+    // Vynucený jazyk – pomáhá Samsung Internetu přestat číst anglicky
+    u.lang = 'cs-CZ';
+
+    u.rate   = (state.settings && state.settings.ttsRate   != null) ? state.settings.ttsRate   : 1;
+    u.volume = (state.settings && state.settings.ttsVolume != null) ? state.settings.ttsVolume : 1;
+    u.pitch  = (state.settings && state.settings.ttsPitch  != null) ? state.settings.ttsPitch  : 1;
+
+    try{ window.speechSynthesis.cancel(); }catch(e){}
+    window.speechSynthesis.speak(u);
+  }catch(e){}
+}
+
 function playNumber(n){ speakText(n); }
-function playWord(w){ speakText(w==='vyhra'?'Výhra':(w==='bust'?'Bust':w)); }
+function playWord(w){
+  if(w==='bust'  && state.settings && state.settings.ttsSpeakBust===false) return;
+  if(w==='vyhra' && state.settings && state.settings.ttsSpeakWin===false)  return;
+  speakText(w==='vyhra' ? 'Výhra' : 'Bust');
+}
+
+// inicializace seznamu hlasů
+if('speechSynthesis' in window){
+  refreshVoices();
+  if('onvoiceschanged' in window.speechSynthesis){
+    window.speechSynthesis.onvoiceschanged = refreshVoices;
+  }
+  // Některé prohlížeče (Samsung) načítají hlasy opožděně – znovu po zviditelnění
+  document.addEventListener('visibilitychange', function(){
+    if(document.visibilityState==='visible') refreshVoices();
+  });
+}
 
 /* ===== Stav ===== */
 var state={
@@ -345,7 +430,27 @@ var state={
 function ts(){return Date.now();}
 function loadHistory(){ try{ return JSON.parse(localStorage.getItem('dartsHistoryV1'))||{players:[],legs:[]}; }catch(e){ return {players:[],legs:[]}; } }
 function saveHistory(){ localStorage.setItem('dartsHistoryV1', JSON.stringify(state.history)); }
-function loadSettings(){ try{ return JSON.parse(localStorage.getItem('dartsSettingsV1'))||{theme:'theme-dark',colorizeKeys:true,minimalUi:true,stickyBar:true,showTips:true}; }catch(e){ return {theme:'theme-dark',colorizeKeys:true,minimalUi:true,stickyBar:true,showTips:true}; } }
+function loadSettings(){
+  try{
+    return JSON.parse(localStorage.getItem('dartsSettingsV1')) || {
+      theme:'theme-dark',
+      colorizeKeys:true,
+      minimalUi:true,
+      stickyBar:true,
+      showTips:true,
+      // TTS defaulty:
+      ttsRate:1,
+      ttsVolume:1,
+      ttsPitch:1,
+      ttsVoice:'auto',
+      ttsSpeakBust:true,
+      ttsSpeakWin:true
+    };
+  }catch(e){
+    return { theme:'theme-dark', colorizeKeys:true, minimalUi:true, stickyBar:true, showTips:true,
+      ttsRate:1, ttsVolume:1, ttsPitch:1, ttsVoice:'auto', ttsSpeakBust:true, ttsSpeakWin:true };
+  }
+}
 function saveSettings(){ localStorage.setItem('dartsSettingsV1', JSON.stringify(state.settings)); }
 function loadActive(){ try{ return JSON.parse(localStorage.getItem('dartsActiveV1'))||null; }catch(e){ return null; } }
 function saveActive(){ var snapshot={ startingScore:state.startingScore,doubleOut:state.doubleOut,players:state.players,currentIndex:state.currentIndex,leg:state.leg,soundOn:state.soundOn }; localStorage.setItem('dartsActiveV1', JSON.stringify(snapshot)); }
@@ -538,7 +643,7 @@ function syncGameOptionsUI(){
   var s = document.getElementById('soundToggle'); if(s) s.checked = !!state.soundOn;
 }
 
-/* ====== Nastavení (téma, barvy, minimal UI, sticky panel, tipy) ====== */
+/* ====== Nastavení (téma, barvy, minimal UI, sticky panel, tipy + TTS) ====== */
 var THEME_CLASSES=['theme-dark','theme-light','theme-contrast','theme-light-blue','theme-light-mint','theme-light-rose','theme-light-sand'];
 function applySettings(){
   var b=document.body, theme = state.settings && state.settings.theme ? state.settings.theme : 'theme-dark';
@@ -565,6 +670,32 @@ function bindSettingsUI(){
     st.checked = (state.settings && (typeof state.settings.showTips!=='undefined')) ? !!state.settings.showTips : true;
     st.onchange = function(){ state.settings.showTips = st.checked; saveSettings(); if(typeof renderTips==='function') renderTips(); };
   }
+
+  /* === TTS ovládání === */
+  populateVoiceSelect();
+  var vsel = document.getElementById('ttsVoice');
+  if(vsel){
+    vsel.value = (state.settings && state.settings.ttsVoice) || 'auto';
+    vsel.onchange = function(){ state.settings.ttsVoice = vsel.value; saveSettings(); };
+  }
+  function bindRange(id, key, def){
+    var el=document.getElementById(id);
+    if(!el) return;
+    el.value = (state.settings && state.settings[key]!=null) ? state.settings[key] : def;
+    el.oninput = function(){ state.settings[key] = parseFloat(el.value); saveSettings(); };
+  }
+  bindRange('ttsRate','ttsRate',1);
+  bindRange('ttsVolume','ttsVolume',1);
+  bindRange('ttsPitch','ttsPitch',1);
+
+  var sb2=document.getElementById('ttsSpeakBust');
+  if(sb2){ sb2.checked = state.settings.ttsSpeakBust!==false; sb2.onchange=function(){ state.settings.ttsSpeakBust=sb2.checked; saveSettings(); }; }
+
+  var sw2=document.getElementById('ttsSpeakWin');
+  if(sw2){ sw2.checked = state.settings.ttsSpeakWin!==false; sw2.onchange=function(){ state.settings.ttsSpeakWin=sw2.checked; saveSettings(); }; }
+
+  var test=document.getElementById('ttsTestBtn');
+  if(test){ test.addEventListener('click', function(){ speakText(60); }); }
 }
 
 /* ===== Renderování ===== */

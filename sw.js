@@ -4,7 +4,7 @@
   - okamžitá aktivace nové verze (SKIP_WAITING)
 */
 
-const CACHE_VERSION = 'darts-cache-v2';
+const CACHE_VERSION = 'darts-cache-v3';
 const ASSETS = [
   './',
   './index.html',

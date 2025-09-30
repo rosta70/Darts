@@ -123,38 +123,6 @@
     body.theme-light button.primary{background:linear-gradient(180deg,#f0f4ff,#e3e9ff);border-color:#b9d1ff;color:#0f1230}
     body.theme-light button.warn{background:#fff4d6;border-color:#e8c66a;color:#5a3b00}
     body.theme-light button.danger{background:#ffe5e5;border-color:#f5a3a3;color:#7a1a1a}
-
-    /* světelná témata – viditelnost hráčů */
-    body.theme-light .col,
-    body.theme-light-blue .col,
-    body.theme-light-mint .col,
-    body.theme-light-rose .col,
-    body.theme-light-sand .col,
-    body.theme-contrast .col{ background:#ffffff; border-color:var(--border); }
-    body.theme-light .player,
-    body.theme-light-blue .player,
-    body.theme-light-mint .player,
-    body.theme-light-rose .player,
-    body.theme-light-sand .player,
-    body.theme-contrast .player{ background:#ffffff; border-color:#cfd6f1; color:#0f1230; }
-    body.theme-light .player .name,
-    body.theme-light .player .score,
-    body.theme-light-blue .player .name,
-    body.theme-light-blue .player .score,
-    body.theme-light-mint .player .name,
-    body.theme-light-mint .player .score,
-    body.theme-light-rose .player .name,
-    body.theme-light-rose .player .score,
-    body.theme-light-sand .player .name,
-    body.theme-light-sand .player .score,
-    body.theme-contrast .player .name,
-    body.theme-contrast .player .score{ color:#0f1230; }
-    body.theme-light .pill,
-    body.theme-light-blue .pill,
-    body.theme-light-mint .pill,
-    body.theme-light-rose .pill,
-    body.theme-light-sand .pill,
-    body.theme-contrast .pill{ background:#eef3ff; color:#2b345a; border-color:#cfd6f1; }
   </style>
 </head>
 <body class="theme-dark color-keys sticky-info minimal">
@@ -326,6 +294,9 @@
 <div class="stickybar" id="stickyBar">—</div>
 
 <script>
+/* === SAFE PREP: placeholder, aby TTS předčasně nespadlo na state === */
+var state = window.state || { settings: {} };
+
 /* ===== SW AUTOFIX: odregistrovat staré SW a hned registrovat nový ===== */
 (function(){
   if(!('serviceWorker' in navigator)) return;
@@ -372,7 +343,7 @@ async function doInstall(){
 var voices = [];
 function populateVoiceSelect(){
   var sel = document.getElementById('ttsVoice'); if(!sel) return;
-  var cur = (state.settings && state.settings.ttsVoice) ? state.settings.ttsVoice : 'auto';
+  var cur = (window.state && state.settings && state.settings.ttsVoice) ? state.settings.ttsVoice : 'auto';
   sel.innerHTML = '';
   var optAuto = document.createElement('option');
   optAuto.value='auto'; optAuto.textContent='Automaticky (preferuj češtinu)';
@@ -423,7 +394,7 @@ function playWord(w){
   speakText(w==='vyhra' ? 'Výhra' : 'Bust');
 }
 if('speechSynthesis' in window){
-  refreshVoices();
+  // první refreshVoices spustíme až po vytvoření state (níže)
   if('onvoiceschanged' in window.speechSynthesis){
     window.speechSynthesis.onvoiceschanged = refreshVoices;
   }
@@ -432,18 +403,7 @@ if('speechSynthesis' in window){
   });
 }
 
-/* ===== Stav ===== */
-var state={
-  startingScore:301,
-  doubleOut:false,
-  soundOn:true,
-  players:[],
-  currentIndex:0,
-  leg:{ id:ts(), turns:[], startingScore:301, doubleOut:false, createdAt:new Date().toISOString() },
-  history: loadHistory(),
-  multiplier:1,
-  settings: loadSettings()
-};
+/* ===== Pomocné funkce + LOAD/SAVE před definicí state (bez hoist závislostí) ===== */
 function ts(){return Date.now();}
 function loadHistory(){ try{ return JSON.parse(localStorage.getItem('dartsHistoryV1'))||{players:[],legs:[]}; }catch(e){ return {players:[],legs:[]}; } }
 function saveHistory(){ localStorage.setItem('dartsHistoryV1', JSON.stringify(state.history)); }
@@ -466,6 +426,21 @@ function loadSettings(){
 function saveSettings(){ localStorage.setItem('dartsSettingsV1', JSON.stringify(state.settings)); }
 function loadActive(){ try{ return JSON.parse(localStorage.getItem('dartsActiveV1'))||null; }catch(e){ return null; } }
 function saveActive(){ var snapshot={ startingScore:state.startingScore,doubleOut:state.doubleOut,players:state.players,currentIndex:state.currentIndex,leg:state.leg,soundOn:state.soundOn }; localStorage.setItem('dartsActiveV1', JSON.stringify(snapshot)); }
+
+/* ===== Stav (teď už máme dostupné load funkce) ===== */
+state = {
+  startingScore:301,
+  doubleOut:false,
+  soundOn:true,
+  players:[],
+  currentIndex:0,
+  leg:{ id:ts(), turns:[], startingScore:301, doubleOut:false, createdAt:new Date().toISOString() },
+  history: loadHistory(),
+  multiplier:1,
+  settings: loadSettings()
+};
+/* Teď už existuje state → načti hlasy do selectu */
+if('speechSynthesis' in window){ try{ refreshVoices(); }catch(e){} }
 
 /* ===== Panely ===== */
 var panels=document.querySelectorAll('[data-panel]');
@@ -907,6 +882,14 @@ window.finishTurn      = finishTurn;
 window.downloadHistory = downloadHistory;
 window.importHistory   = importHistory;
 window.clearAll        = clearAll;
+
+/* Mini diagnostika do konzole (kdyby se ještě něco rozbilo) */
+window.addEventListener('error', function(e){
+  console.log('JS error:', e.message, e.filename+':'+e.lineno);
+});
+window.addEventListener('unhandledrejection', function(e){
+  console.log('Promise error:', e.reason);
+});
 </script>
 </body>
 </html>

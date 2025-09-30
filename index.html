@@ -390,8 +390,12 @@ function enterScore(base,mul){ mul=mul||state.multiplier; const player=currentPl
   state.multiplier=1; document.querySelectorAll('#multiplier .chip').forEach(c=>c.classList.remove('active')); const sbtn=document.querySelector('#multiplier .chip[data-mul="1"]'); if(sbtn) sbtn.classList.add('active');
   updateUI(); saveActive(); }
 
-function finishTurn(){ const player=currentPlayer(); if(!player) return; const darts=player.turnThrows||[]; if(darts.length===0){ nextPlayer(); renderPlayers(); updateTurnInfo(); updateSticky(); renderTips(); saveActive(); return; }
+function finishTurn(){ const player=currentPlayer(); if(!player) return; const darts=player.turnThrows||[]; if(darts.length===0){ nextPlayer(); renderPlayers(); saveActive(); return; }
   const turnTotal=darts.reduce((a,d)=>a+d.score,0); let remaining=player.remaining - turnTotal; let bust=false;
+  if (typeof updateTurnInfo === 'function') updateTurnInfo();
+if (typeof updateSticky    === 'function') updateSticky();
+if (typeof updateTopBar    === 'function') updateTopBar();
+if (typeof renderTips      === 'function') renderTips();
   if(remaining<0){ bust=true; remaining=player.remaining; } else if(remaining===0){ if(state.doubleOut){ const last=darts[darts.length-1]; if(last.mul!==2){ bust=true; remaining=player.remaining; } } } else if(state.doubleOut && remaining===1){ bust=true; remaining=player.remaining; }
   if(!bust){ player.remaining=remaining; }
   const record={ playerId:player.id, playerName:player.name, darts:deepClone(darts), turnTotal, bust, remainingAfter:player.remaining, when:new Date().toISOString() };
@@ -521,6 +525,59 @@ function shuffleArray(arr){ for(let i=arr.length-1;i>0;i--){ const j=Math.floor(
 function deepClone(o){ try{ return (typeof structuredClone==='function') ? structuredClone(o) : JSON.parse(JSON.stringify(o)); } catch(e){ return JSON.parse(JSON.stringify(o)); } }
 
 function updateUI(){ document.body.classList.toggle('playing', isInProgress()); togglePlayerControls(isInProgress()); updateSticky(); updateTopBar(); renderTips(); }
+function updateTurnInfo(){
+  var el = document.getElementById('turnInfo');
+  var p  = currentPlayer ? currentPlayer() : null;
+  if (!el) return;
+  el.innerHTML = p
+    ? 'Na tahu: <b>'+escapeHtml(p.name)+'</b> • Zbývá: '+p.remaining
+    : 'Na tahu: –';
+}
+
+function updateSticky(){
+  var el = document.getElementById('stickyBar'); if (!el) return;
+  var p  = currentPlayer ? currentPlayer() : null;
+  var throwsTxt = (p && p.turnThrows && p.turnThrows.length)
+      ? p.turnThrows.map(formatDartShort).join(', ')
+      : '—';
+  el.innerHTML = p
+    ? 'Na tahu: <b>'+escapeHtml(p.name)+'</b> • Zbývá: <b>'+p.remaining+'</b> • Hody: '+throwsTxt
+    : '—';
+}
+
+function updateTopBar(){
+  var top = document.getElementById('activeTop'); if (!top) return;
+  var playing = isInProgress && isInProgress();
+  top.style.display = playing ? 'flex' : 'none';
+  if (!playing) return;
+
+  var p = currentPlayer ? currentPlayer() : null;
+  var tname = document.getElementById('activeTopName');
+  var trem  = document.getElementById('activeTopRemain');
+  var tthr  = document.getElementById('activeTopThrows');
+
+  if (tname) tname.textContent = p ? p.name : '—';
+  if (trem)  trem.textContent  = p ? ('Zbývá: '+p.remaining) : '';
+  if (tthr)  tthr.textContent  = 'Hody: ' + ((p && p.turnThrows && p.turnThrows.length)
+                      ? p.turnThrows.map(formatDartShort).join(', ')
+                      : '—');
+}
+
+function togglePlayerControls(disabled){
+  var inp = document.getElementById('newPlayerName');
+  var btn = document.getElementById('addPlayerBtn');
+  if (inp){ inp.disabled = disabled; inp.placeholder = disabled ? 'Nelze během hry' : 'Jméno hráče'; }
+  if (btn){ btn.disabled = disabled; }
+}
+
+function updateUI(){
+  var playing = isInProgress && isInProgress();
+  document.body.classList.toggle('playing', !!playing);
+  togglePlayerControls(!!playing);
+  updateSticky();
+  updateTopBar();
+  if (typeof renderTips === 'function') renderTips();
+}
 
 // Init
 function buildKeypad(){ const pad=document.getElementById('keypad'); pad.innerHTML=''; const nums=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,25,50]; nums.forEach(n=>{ const b=document.createElement('button'); b.className='key'; b.textContent=n; b.addEventListener('click',()=>enterScore(n)); pad.appendChild(b); }); const miss=document.createElement('button'); miss.className='key miss'; miss.textContent='Miss'; miss.addEventListener('click',()=>enterScore(0,1)); pad.appendChild(miss); }

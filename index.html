@@ -457,15 +457,36 @@ function syncGameOptionsUI(){ const cur=String(state.startingScore); document.qu
 function shuffleArray(arr){ for(let i=arr.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; } }
 function deepClone(o){ try{ return (typeof structuredClone==='function') ? structuredClone(o) : JSON.parse(JSON.stringify(o)); } catch(e){ return JSON.parse(JSON.stringify(o)); } }
 
-function updateUI(){ document.body.classList.toggle('playing', isInProgress()); updateSticky(); updateTopBar(); renderTips(); }
+function updateUI(){ document.body.classList.toggle('playing', isInProgress()); togglePlayerControls(isInProgress()); updateSticky(); updateTopBar(); renderTips(); }
 
 // Init
 function buildKeypad(){ const pad=document.getElementById('keypad'); pad.innerHTML=''; const nums=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,25,50]; nums.forEach(n=>{ const b=document.createElement('button'); b.className='key'; b.textContent=n; b.addEventListener('click',()=>enterScore(n)); pad.appendChild(b); }); const miss=document.createElement('button'); miss.className='key miss'; miss.textContent='Miss'; miss.addEventListener('click',()=>enterScore(0,1)); pad.appendChild(miss); }
+// Fallback pro prohlížeče, kde inline onclick neprojde:
+(function bindAddPlayer(){
+  var btn = document.getElementById('addPlayerBtn');
+  var inp = document.getElementById('newPlayerName');
+  if (btn) btn.addEventListener('click', function(e){ e.preventDefault(); addPlayer(); });
+  if (inp) inp.addEventListener('keydown', function(e){ if (e.key==='Enter') addPlayer(); });
+})();
 function setupMultiplierChips(){ const box=document.getElementById('multiplier'); box.querySelectorAll('.chip').forEach(ch=>{ ch.addEventListener('click',()=>{ box.querySelectorAll('.chip').forEach(c=>c.classList.remove('active')); ch.classList.add('active'); state.multiplier=Number(ch.dataset.mul); saveActive(); }); }); }
-
+  
 buildKeypad(); setupMultiplierChips(); bindGameOptions(); renderPlayers(); renderLiveHistory(); updateTurnInfo(); applySettings(); bindSettingsUI(); syncGameOptionsUI();
 const saved=loadActive(); if(saved && saved.players && saved.players.length){ state.startingScore=saved.startingScore??state.startingScore; state.doubleOut=!!saved.doubleOut; state.players=saved.players; state.currentIndex=saved.currentIndex||0; state.leg=saved.leg||state.leg; renderPlayers(); renderLiveHistory(); updateTurnInfo(); syncGameOptionsUI(); }
 updateUI();
+window.addPlayer       = addPlayer;
+window.startGameRandom = startGameRandom;
+window.startNewLeg     = startNewLeg;
+window.abortLeg        = abortLeg;
+window.undoLastDart    = undoLastDart;
+window.enterScore      = enterScore;
+window.finishTurn      = finishTurn;
+function togglePlayerControls(disabled){
+  var inp = document.getElementById('newPlayerName');
+  var btn = document.getElementById('addPlayerBtn');
+  if (inp) { inp.disabled = disabled; inp.placeholder = disabled ? 'Nelze během hry' : 'Jméno hráče'; }
+  if (btn) { btn.disabled = disabled; }
+}
+
 </script>
 </body>
 </html>

@@ -2,15 +2,15 @@
   "name": "Šipky – zapis skóre",
   "short_name": "Šipky",
   "description": "Zapisování skóre pro šipky (x01, více hráčů, historie, žebříček).",
-  "start_url": "/Darts/",
-  "scope": "/Darts/",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#0b0e1a",
   "theme_color": "#0b0e1a",
   "icons": [
-    { "src": "icons/icon-192.png",        "sizes": "192x192", "type": "image/png" },
-    { "src": "icons/icon-512.png",        "sizes": "512x512", "type": "image/png" },
-    { "src": "icons/maskable-192.png",    "sizes": "192x192", "type": "image/png", "purpose": "maskable any" },
-    { "src": "icons/maskable-512.png",    "sizes": "512x512", "type": "image/png", "purpose": "maskable any" }
+    { "src": "icons/icon-192.png",     "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png",     "sizes": "512x512", "type": "image/png" },
+    { "src": "icons/maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable any" },
+    { "src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable any" }
   ]
 }
